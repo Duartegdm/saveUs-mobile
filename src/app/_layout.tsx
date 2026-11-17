@@ -13,7 +13,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
-import { queryClient } from '@/lib/query-client';
+import { queryClient } from '@/services/query-client';
 import { colors } from '@/theme/colors';
 
 SplashScreen.preventAutoHideAsync();
