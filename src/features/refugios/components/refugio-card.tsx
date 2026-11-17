@@ -5,13 +5,8 @@ import { TIPO_REFUGIO } from '@/constants/tipo-refugio';
 import { colors } from '@/theme/colors';
 import type { Refugio } from '@/types/refugio';
 import { formatarHora } from '@/utils/date';
-import { calcularDisponibilidade, type SituacaoDeVagas } from '../disponibilidade';
-
-const ESTILO_DA_SITUACAO = {
-  livre: { tom: 'secondary', barra: 'success' },
-  poucas: { tom: 'default', barra: 'warning' },
-  lotado: { tom: 'error', barra: 'danger' },
-} as const satisfies Record<SituacaoDeVagas, { tom: 'secondary' | 'default' | 'error'; barra: string }>;
+import { calcularDisponibilidade } from '../disponibilidade';
+import { ESTILO_DA_SITUACAO } from '../estilo-da-situacao';
 
 type RefugioCardProps = {
   refugio: Refugio;

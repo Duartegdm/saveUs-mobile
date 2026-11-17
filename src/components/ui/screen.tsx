@@ -8,10 +8,11 @@ export type ScreenProps = {
   children: ReactNode;
   scroll?: boolean;
   edges?: Edge[];
+  rodape?: ReactNode;
   className?: string;
 };
 
-export function Screen({ children, scroll = true, edges = ['top'], className }: ScreenProps) {
+export function Screen({ children, scroll = true, edges = ['top'], rodape, className }: ScreenProps) {
   const conteudo = (
     <View className={cn('flex-1 gap-space-md px-gutter-mobile py-space-md', className)}>{children}</View>
   );
@@ -25,6 +26,11 @@ export function Screen({ children, scroll = true, edges = ['top'], className }: 
           </ScrollView>
         ) : (
           conteudo
+        )}
+        {rodape && (
+          <View className="gap-2 border-t border-outline-variant/40 bg-surface-container-lowest px-gutter-mobile pb-space-md pt-3">
+            {rodape}
+          </View>
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
