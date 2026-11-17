@@ -51,4 +51,6 @@ export const colors = {
 
   outline: '#717879',
   'outline-variant': '#c1c8c9',
+
+  breeze: '#7fdfe0',
 } as const;

@@ -13,6 +13,7 @@ export type InputProps = Omit<TextInputProps, 'style' | 'placeholderTextColor' |
   required?: boolean;
   password?: boolean;
   showCounter?: boolean;
+  hideErrorMessage?: boolean;
   ref?: Ref<ComponentRef<typeof TextInput>>;
 };
 
@@ -24,6 +25,7 @@ export function Input({
   required = false,
   password = false,
   showCounter = false,
+  hideErrorMessage = false,
   maxLength,
   value,
   editable = true,
@@ -35,7 +37,7 @@ export function Input({
   const [focado, setFocado] = useState(false);
   const [senhaVisivel, setSenhaVisivel] = useState(false);
 
-  const corDoIcone = error ? colors.error : colors['on-surface-variant'];
+  const corDoIcone = error ? colors.error : focado ? colors.secondary : colors.outline;
   const IconeDaSenha = senhaVisivel ? EyeOff : Eye;
 
   return (
@@ -54,10 +56,9 @@ export function Input({
 
       <View
         className={cn(
-          'h-12 flex-row items-center gap-space-sm rounded-lg border-2 px-3',
-          focado ? 'bg-surface-container-lowest' : 'bg-surface-container-low',
-          error ? 'border-error' : focado ? 'border-primary' : 'border-transparent',
-          !editable && 'bg-surface-container opacity-80',
+          'h-14 flex-row items-center gap-3 rounded-xl border-[1.5px] px-4',
+          editable ? 'bg-surface-container-lowest' : 'bg-surface-container',
+          error ? 'border-error' : focado ? 'border-secondary' : 'border-outline-variant',
         )}>
         {Icone && <Icone color={corDoIcone} size={20} />}
         <TextInput
@@ -86,13 +87,13 @@ export function Input({
             accessibilityRole="button"
             accessibilityLabel={senhaVisivel ? 'Ocultar senha' : 'Mostrar senha'}
             onPress={() => setSenhaVisivel((visivel) => !visivel)}
-            className="-mr-3 h-12 w-12 items-center justify-center">
+            className="-mr-4 h-14 w-14 items-center justify-center">
             <IconeDaSenha color={colors['on-surface-variant']} size={20} />
           </Pressable>
         )}
       </View>
 
-      {error ? (
+      {error && !hideErrorMessage ? (
         <View className="flex-row items-center gap-1" accessibilityLiveRegion="polite">
           <CircleAlert color={colors.error} size={16} />
           <Text variant="bodySm" tone="error" className="flex-1">

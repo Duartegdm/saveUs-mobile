@@ -4,7 +4,7 @@ import { colors } from './src/theme/colors';
 
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  darkMode: 'class',
   presets: [require('nativewind/preset')],
   theme: {
     extend: {

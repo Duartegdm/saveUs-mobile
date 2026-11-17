@@ -13,7 +13,7 @@ const VARIANTES = {
 
 const TAMANHOS = {
   md: 'min-h-12 px-space-md',
-  lg: 'min-h-[52px] px-space-lg',
+  lg: 'min-h-14 px-space-lg',
 } as const;
 
 export type ButtonVariant = keyof typeof VARIANTES;
@@ -49,7 +49,7 @@ export function Button({
       accessibilityState={{ disabled: desabilitado, busy: loading }}
       disabled={desabilitado}
       className={cn(
-        'flex-row items-center justify-center gap-space-sm rounded-lg active:opacity-90',
+        'flex-row items-center justify-center gap-space-sm rounded-xl active:opacity-90',
         fundo,
         TAMANHOS[size],
         desabilitado && 'opacity-60',
