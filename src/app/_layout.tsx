@@ -12,6 +12,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { AuthProvider } from '@/features/auth/auth-provider';
+import { rotaInicial } from '@/features/auth/rota-inicial';
 import { useAuth } from '@/features/auth/use-auth';
 import { queryClient } from '@/services/query-client';
 import { colors } from '@/theme/colors';
@@ -39,28 +40,28 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { status } = useAuth();
+  const auth = useAuth();
 
   useEffect(() => {
-    if (status !== 'carregando') SplashScreen.hideAsync();
-  }, [status]);
+    if (auth.status !== 'carregando') SplashScreen.hideAsync();
+  }, [auth.status]);
 
-  if (status === 'carregando') return null;
+  if (auth.status === 'carregando') return null;
+
+  const papel = auth.status === 'autenticado' ? auth.usuario.papel : null;
+  const destino = rotaInicial(papel);
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: colors.surface },
-        headerTintColor: colors['on-surface'],
-        headerTitleStyle: { fontFamily: 'PlusJakartaSans_600SemiBold' },
-        headerShadowVisible: false,
-        contentStyle: { backgroundColor: colors.surface },
-      }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="refugio/[id]" options={{ title: 'Detalhes do refúgio' }} />
-      <Stack.Screen name="reserva/[id]" options={{ title: 'Comprovante' }} />
-      <Stack.Screen name="guia-calor" options={{ title: 'Guia do Calor' }} />
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.surface } }}>
+      <Stack.Protected guard={papel === null} redirectTo={destino}>
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+      <Stack.Protected guard={papel === 'IDOSO'} redirectTo={destino}>
+        <Stack.Screen name="(idoso)" />
+      </Stack.Protected>
+      <Stack.Protected guard={papel === 'GESTOR'} redirectTo={destino}>
+        <Stack.Screen name="gestor" />
+      </Stack.Protected>
     </Stack>
   );
 }

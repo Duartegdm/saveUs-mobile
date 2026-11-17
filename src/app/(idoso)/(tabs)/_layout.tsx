@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router/js-tabs';
-import { CircleUser, Droplets, MapPin, Ticket } from 'lucide-react-native';
-
+import { CircleUser, Droplets, Ticket } from 'lucide-react-native';
 import { colors } from '@/theme/colors';
 
 export default function TabsLayout() {
@@ -18,13 +17,6 @@ export default function TabsLayout() {
         options={{
           title: 'Início',
           tabBarIcon: ({ color, size }) => <Droplets color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="refugios"
-        options={{
-          title: 'Refúgios',
-          tabBarIcon: ({ color, size }) => <MapPin color={color} size={size} />,
         }}
       />
       <Tabs.Screen
