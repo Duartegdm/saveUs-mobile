@@ -2,6 +2,7 @@ export { Alert, type AlertProps, type AlertTone } from './alert';
 export { Badge, type BadgeProps, type BadgeTone } from './badge';
 export { Button, type ButtonProps, type ButtonVariant } from './button';
 export { Card, type CardProps } from './card';
+export { FolhaInferior, type FolhaInferiorProps } from './folha-inferior';
 export { Input, type InputProps } from './input';
 export { ProgressBar, type ProgressBarProps } from './progress-bar';
 export { Screen, type ScreenProps } from './screen';

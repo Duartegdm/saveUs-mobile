@@ -1,8 +1,7 @@
 import { MapPin } from 'lucide-react-native';
 import { useState } from 'react';
-import { Modal, Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Input, Text } from '@/components/ui';
+import { Pressable, View } from 'react-native';
+import { Button, FolhaInferior, Input, Text } from '@/components/ui';
 import { colors } from '@/theme/colors';
 
 type SeletorBairroProps = {
@@ -49,43 +48,22 @@ export function SeletorBairro({ bairro, onEscolher }: SeletorBairroProps) {
         </Pressable>
       </View>
 
-      <Modal visible={aberto} transparent animationType="slide" onRequestClose={() => setAberto(false)}>
-        <View className="flex-1 justify-end bg-primary/40">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Fechar"
-            className="flex-1"
-            onPress={() => setAberto(false)}
-          />
-          <SafeAreaView
-            edges={['bottom']}
-            style={{
-              backgroundColor: colors['surface-container-lowest'],
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-            }}>
-            <View className="gap-space-md p-space-lg">
-              <Text variant="title" weight="bold">
-                Escolher bairro
-              </Text>
-              <Input
-                label="Bairro"
-                icon={MapPin}
-                placeholder="Ex.: Penha"
-                value={texto}
-                onChangeText={setTexto}
-                autoCapitalize="words"
-                returnKeyType="search"
-                onSubmitEditing={() => escolher(texto)}
-                maxLength={100}
-                autoFocus
-              />
-              <Button label="Ver refúgios deste bairro" disabled={!texto.trim()} onPress={() => escolher(texto)} />
-              <Button label="Ver todos os bairros" variant="tonal" onPress={() => escolher(null)} />
-            </View>
-          </SafeAreaView>
-        </View>
-      </Modal>
+      <FolhaInferior visivel={aberto} titulo="Escolher bairro" onFechar={() => setAberto(false)}>
+        <Input
+          label="Bairro"
+          icon={MapPin}
+          placeholder="Ex.: Penha"
+          value={texto}
+          onChangeText={setTexto}
+          autoCapitalize="words"
+          returnKeyType="search"
+          onSubmitEditing={() => escolher(texto)}
+          maxLength={100}
+          autoFocus
+        />
+        <Button label="Ver refúgios deste bairro" disabled={!texto.trim()} onPress={() => escolher(texto)} />
+        <Button label="Ver todos os bairros" variant="tonal" onPress={() => escolher(null)} />
+      </FolhaInferior>
     </>
   );
 }
