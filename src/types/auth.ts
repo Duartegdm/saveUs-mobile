@@ -1,5 +1,4 @@
 import { z } from 'zod';
-
 import { usuarioResumoSchema } from './usuario';
 
 export const loginResponseSchema = z.object({

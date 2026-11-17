@@ -1,5 +1,4 @@
 import { z } from 'zod';
-
 import { dataSchema } from './common';
 
 export const statusReservaSchema = z.enum(['ATIVA', 'CANCELADA']);

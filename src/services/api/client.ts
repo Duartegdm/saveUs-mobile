@@ -1,5 +1,4 @@
 import { create, isAxiosError } from 'axios';
-
 import { toApiError } from './errors';
 import { getAuthToken, notifyUnauthorized } from './session';
 

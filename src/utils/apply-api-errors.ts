@@ -1,5 +1,4 @@
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form';
-
 import { ApiError } from '@/services/api';
 
 type FormErrorTarget<T extends FieldValues> = Pick<UseFormReturn<T>, 'setError' | 'getValues'>;

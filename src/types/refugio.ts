@@ -1,5 +1,4 @@
 import { z } from 'zod';
-
 import { horaSchema, paginaSchema } from './common';
 
 export const tipoRefugioSchema = z.enum([
