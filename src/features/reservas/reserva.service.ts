@@ -7,3 +7,8 @@ export async function criarReserva(reserva: CriarReservaRequest, chaveDeIdempote
   });
   return reservaSchema.parse(data);
 }
+
+export async function obterReserva(id: number) {
+  const { data } = await api.get<unknown>(`/api/v1/reservas/${id}`);
+  return reservaSchema.parse(data);
+}

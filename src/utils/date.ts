@@ -59,6 +59,22 @@ export function formatarRotuloDoDia(data: DataApi, hoje: DataApi = hojeEmSaoPaul
   return `${DIAS_DA_SEMANA_CURTOS[utc.getUTCDay()]}, ${utc.getUTCDate()}`;
 }
 
+const doisDigitos = (valor: number) => String(valor).padStart(2, '0');
+
+export function formatarDataCurta(data: DataApi): string {
+  const utc = paraUtc(data);
+  return `${doisDigitos(utc.getUTCDate())}/${doisDigitos(utc.getUTCMonth() + 1)}/${utc.getUTCFullYear()}`;
+}
+
+export function formatarDataHora(instante: string): string {
+  const milissegundos = Date.parse(instante);
+  if (Number.isNaN(milissegundos)) throw new Error(`Data e hora inválidas: "${instante}"`);
+
+  const emSaoPaulo = new Date(milissegundos + OFFSET_SAO_PAULO_MS);
+  const data = formatarDataCurta(deUtc(emSaoPaulo));
+  return `${data} às ${doisDigitos(emSaoPaulo.getUTCHours())}:${doisDigitos(emSaoPaulo.getUTCMinutes())}`;
+}
+
 export function formatarHora(hora: string): string {
   const [horas, minutos] = hora.split(':');
   const h = Number(horas);

@@ -10,5 +10,6 @@ export const queryKeys = {
   },
   reservas: {
     todas: ['reservas'] as const,
+    detalhe: (id: number) => ['reservas', 'detalhe', id] as const,
   },
 };

@@ -5,16 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { Text } from '@/components/ui';
 import { colors } from '@/theme/colors';
+import { sombraSuave } from '@/theme/sombras';
 
 const logo = require('../../../../assets/saveUs-logo.png');
-
-const sombraDoCard = {
-  shadowColor: colors.primary,
-  shadowOffset: { width: 0, height: 8 },
-  shadowOpacity: 0.06,
-  shadowRadius: 24,
-  elevation: 3,
-};
 
 type AuthLayoutProps = {
   titulo: string;
@@ -35,7 +28,7 @@ export function AuthLayout({ titulo, subtitulo, children, rodape }: AuthLayoutPr
             contentContainerClassName="flex-grow justify-center px-gutter-mobile py-space-xl">
             <View
               className="w-full max-w-[420px] self-center rounded-[24px] border border-outline-variant/40 bg-surface-container-lowest px-space-lg py-7"
-              style={sombraDoCard}>
+              style={sombraSuave}>
               <View className="items-center pb-7">
                 <Image
                   source={logo}
