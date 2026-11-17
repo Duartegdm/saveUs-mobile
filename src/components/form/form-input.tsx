@@ -1,15 +1,21 @@
 import { type Control, Controller, type FieldValues, type Path } from 'react-hook-form';
 import { Input, type InputProps } from '@/components/ui';
 
-export type FormInputProps<T extends FieldValues> = Omit<
+export type FormInputProps<T extends FieldValues, TSaida extends FieldValues = T> = Omit<
   InputProps,
   'value' | 'onChangeText' | 'onBlur' | 'error' | 'ref'
 > & {
-  control: Control<T>;
+  control: Control<T, unknown, TSaida>;
   name: Path<T>;
+  formatar?: (texto: string) => string;
 };
 
-export function FormInput<T extends FieldValues>({ control, name, ...props }: FormInputProps<T>) {
+export function FormInput<T extends FieldValues, TSaida extends FieldValues = T>({
+  control,
+  name,
+  formatar,
+  ...props
+}: FormInputProps<T, TSaida>) {
   return (
     <Controller
       control={control}
@@ -18,7 +24,7 @@ export function FormInput<T extends FieldValues>({ control, name, ...props }: Fo
         <Input
           ref={field.ref}
           value={typeof field.value === 'string' ? field.value : ''}
-          onChangeText={field.onChange}
+          onChangeText={(texto) => field.onChange(formatar ? formatar(texto) : texto)}
           onBlur={field.onBlur}
           error={fieldState.error?.message}
           {...props}
