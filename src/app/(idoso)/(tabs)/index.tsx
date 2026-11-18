@@ -4,6 +4,7 @@ import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native'
 import { EstadoDaLista } from '@/components/estado-da-lista';
 import { Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/use-auth';
+import { BannerGuiaCalor } from '@/features/guia-calor/components/banner-guia-calor';
 import { FiltroData } from '@/features/refugios/components/filtro-data';
 import { RefugioCard } from '@/features/refugios/components/refugio-card';
 import { SeletorBairro } from '@/features/refugios/components/seletor-bairro';
@@ -75,6 +76,7 @@ export default function InicioScreen() {
         <Text tone="muted">{formatarDataLonga(filtros.hoje)}</Text>
       </View>
 
+      <BannerGuiaCalor />
       <SeletorBairro bairro={filtros.bairro} onEscolher={filtros.escolherBairro} />
       <FiltroData hoje={filtros.hoje} datas={filtros.datas} selecionada={filtros.data} onSelecionar={filtros.setData} />
 

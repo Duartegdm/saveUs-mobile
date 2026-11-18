@@ -7,7 +7,7 @@ import { Text } from '@/components/ui';
 import { colors } from '@/theme/colors';
 import { sombraSuave } from '@/theme/sombras';
 
-const logo = require('../../../../assets/saveUs-logo.png');
+const logo = require('../../../../assets/images/logo.png');
 
 type AuthLayoutProps = {
   titulo: string;
