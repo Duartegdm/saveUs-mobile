@@ -7,6 +7,7 @@
     "scheme": "saveusmobile",
     "userInterfaceStyle": "light",
     "android": {
+      "package": "com.saveus.mobile",
       "predictiveBackGestureEnabled": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
