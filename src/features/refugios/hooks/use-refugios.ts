@@ -5,10 +5,10 @@ import { listarRefugios } from '../refugio.service';
 
 const TAMANHO_DA_PAGINA = 10;
 
-type Filtros = Pick<ListarRefugiosQuery, 'bairro' | 'data'>;
+type Filtros = Pick<ListarRefugiosQuery, 'bairro' | 'data' | 'ativo'>;
 
-export function useRefugios({ bairro, data }: Filtros, { enabled }: { enabled: boolean }) {
-  const filtros = { bairro, data, ativo: true, tamanho: TAMANHO_DA_PAGINA };
+export function useRefugios({ bairro, data, ativo }: Filtros, { enabled = true }: { enabled?: boolean } = {}) {
+  const filtros = { bairro, data, ativo, tamanho: TAMANHO_DA_PAGINA };
 
   const consulta = useInfiniteQuery({
     queryKey: queryKeys.refugios.lista(filtros),

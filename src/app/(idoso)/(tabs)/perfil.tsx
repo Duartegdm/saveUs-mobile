@@ -7,7 +7,7 @@ import { Alert, Button, Card, Input, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/use-auth';
 import { CabecalhoDoPerfil } from '@/features/perfil/components/cabecalho-do-perfil';
 import { useFormularioDoPerfil } from '@/features/perfil/hooks/use-formulario-do-perfil';
-import { mascararTelefone } from '@/utils/telefone';
+import { mascararTelefone } from '@/utils/mascaras';
 
 function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
@@ -122,7 +122,7 @@ export default function PerfilScreen() {
           name="contatoEmergenciaNome"
           label="Nome do contato"
           icon={UserRound}
-          placeholder="Ex.: João Souza (filho)"
+          placeholder="Ex.: João Souza (filho)" 
           maxLength={150}
           autoCapitalize="words"
           hint="Alguém de confiança, como um familiar ou vizinho."

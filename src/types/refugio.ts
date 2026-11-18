@@ -40,27 +40,29 @@ export type ListarRefugiosQuery = {
 
 const cepRegex = /^\d{5}-?\d{3}$/;
 
-export const refugioRequestSchema = z
-  .object({
-    nome: z.string().trim().min(1, 'Informe o nome do refúgio.').max(150),
-    tipo: tipoRefugioSchema,
-    cep: z.string().trim().regex(cepRegex, 'O CEP deve ter 8 dígitos, como 03601-000.'),
-    endereco: z.string().trim().min(1, 'Informe o endereço.').max(200),
-    bairro: z.string().trim().min(1, 'Informe o bairro.').max(100),
-    capacidade: z
-      .number({ error: 'Informe a capacidade.' })
-      .int()
-      .gt(0, 'A capacidade deve ser maior que zero.')
-      .max(10_000),
-    abre: horaSchema,
-    fecha: horaSchema,
-    acessivel: z.boolean(),
-    ativo: z.boolean(),
-  })
-  .refine((r) => r.fecha > r.abre, {
-    path: ['fecha'],
-    message: 'O horário de fechamento deve ser depois da abertura.',
-  });
+export const refugioCamposSchema = z.object({
+  nome: z.string().trim().min(1, 'Informe o nome do refúgio.').max(150),
+  tipo: tipoRefugioSchema,
+  cep: z.string().trim().regex(cepRegex, 'O CEP deve ter 8 dígitos, como 03601-000.'),
+  endereco: z.string().trim().min(1, 'Informe o endereço.').max(200),
+  bairro: z.string().trim().min(1, 'Informe o bairro.').max(100),
+  capacidade: z
+    .number({ error: 'Informe a capacidade.' })
+    .int()
+    .gt(0, 'A capacidade deve ser maior que zero.')
+    .max(10_000, 'A capacidade deve ser de no máximo 10.000 pessoas.'),
+  abre: horaSchema,
+  fecha: horaSchema,
+  acessivel: z.boolean(),
+  ativo: z.boolean(),
+});
+
+export const fechaDepoisDeAbrir = {
+  validar: (r: { abre: string; fecha: string }) => r.fecha > r.abre,
+  opcoes: { path: ['fecha'], message: 'O horário de fechamento deve ser depois da abertura.' },
+};
+
+export const refugioRequestSchema = refugioCamposSchema.refine(fechaDepoisDeAbrir.validar, fechaDepoisDeAbrir.opcoes);
 export type RefugioRequest = z.infer<typeof refugioRequestSchema>;
 
 export const cepResponseSchema = z.object({

@@ -58,7 +58,10 @@ function EstadoDoInicio({ carregando, erro, bairro, onTentarDeNovo, onVerTodos }
 export default function InicioScreen() {
   const auth = useAuth();
   const filtros = useFiltrosDoInicio();
-  const consulta = useRefugios({ bairro: filtros.bairro ?? undefined, data: filtros.data }, { enabled: filtros.pronto });
+  const consulta = useRefugios(
+    { bairro: filtros.bairro ?? undefined, data: filtros.data, ativo: true },
+    { enabled: filtros.pronto },
+  );
 
   const primeiroNome = auth.status === 'autenticado' ? auth.usuario.nome.split(' ')[0] : '';
   const carregandoPrimeiraPagina = !filtros.pronto || consulta.isPending;

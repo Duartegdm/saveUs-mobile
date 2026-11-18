@@ -5,6 +5,7 @@ export const queryKeys = {
   perfil: ['perfil'] as const,
   refugios: {
     todos: ['refugios'] as const,
+    listas: ['refugios', 'lista'] as const,
     lista: (filtros: Omit<ListarRefugiosQuery, 'pagina'>) => ['refugios', 'lista', filtros] as const,
     detalhe: (id: number, data: DataApi) => ['refugios', 'detalhe', id, data] as const,
   },
