@@ -22,7 +22,7 @@ export function useCriarReserva() {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       void queryClient.invalidateQueries({ queryKey: queryKeys.refugios.todos });
       void queryClient.invalidateQueries({ queryKey: queryKeys.reservas.todas });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.guia });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.guia.todos });
     },
     onError: (erro, { refugioId, dataReserva }) => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

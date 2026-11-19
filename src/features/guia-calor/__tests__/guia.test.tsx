@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react-native';
-import { SeuGuiaDeHoje } from '@/features/guia-calor/components/seu-guia-de-hoje';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import { SeuGuiaDoDia } from '@/features/guia-calor/components/seu-guia-do-dia';
 import { obterGuiaPersonalizado } from '@/features/guia-calor/guia.service';
-import { requisicoes, simularErro, simularResposta } from '@/test-utils/api-falsa';
+import { corpoDaUltimaRequisicao, requisicoes, simularErro, simularResposta } from '@/test-utils/api-falsa';
 import { comQueryClient } from '@/test-utils/providers';
 import type { GuiaDoCalor } from '@/types/guia';
+import { adicionarDias, formatarDataLonga, hojeEmSaoPaulo } from '@/utils/date';
 
 const guiaComIa: GuiaDoCalor = {
   resumo: 'Amanhã o calor continua forte. Sua vaga na Biblioteca Municipal da Penha está garantida das 9h às 18h.',
@@ -29,25 +30,26 @@ const guiaComIa: GuiaDoCalor = {
 describe('serviço do guia', () => {
   it('chama o refugio-service do Java com tempo maior para a IA', async () => {
     simularResposta({ data: guiaComIa });
-    await obterGuiaPersonalizado();
+    await obterGuiaPersonalizado('2026-11-27');
     expect(requisicoes[0]).toMatchObject({
       baseURL: 'http://java.teste',
       method: 'post',
       url: '/api/v1/ia/guia-do-calor',
       timeout: 60_000,
     });
+    expect(corpoDaUltimaRequisicao()).toEqual({ data: '2026-11-27' });
   });
 
   it('aceita o guia padrão sem reserva', async () => {
     simularResposta({ data: { ...guiaComIa, refugio: null, geradoPorIa: false } });
-    await expect(obterGuiaPersonalizado()).resolves.toMatchObject({ refugio: null, geradoPorIa: false });
+    await expect(obterGuiaPersonalizado('2026-11-27')).resolves.toMatchObject({ refugio: null, geradoPorIa: false });
   });
 });
 
-describe('SeuGuiaDeHoje', () => {
+describe('SeuGuiaDoDia', () => {
   it('mostra o resumo, a reserva e as dicas geradas', async () => {
     simularResposta({ data: guiaComIa });
-    await render(<SeuGuiaDeHoje />, { wrapper: comQueryClient().wrapper });
+    await render(<SeuGuiaDoDia />, { wrapper: comQueryClient().wrapper });
 
     expect(await screen.findByText(guiaComIa.resumo)).toBeOnTheScreen();
     expect(screen.getByText('Feito para você')).toBeOnTheScreen();
@@ -57,7 +59,7 @@ describe('SeuGuiaDeHoje', () => {
 
   it('guia padrão não diz que foi feito pela IA', async () => {
     simularResposta({ data: { ...guiaComIa, refugio: null, geradoPorIa: false } });
-    await render(<SeuGuiaDeHoje />, { wrapper: comQueryClient().wrapper });
+    await render(<SeuGuiaDoDia />, { wrapper: comQueryClient().wrapper });
 
     expect(await screen.findByText(guiaComIa.resumo)).toBeOnTheScreen();
     expect(screen.queryByText('Feito para você')).not.toBeOnTheScreen();
@@ -65,9 +67,23 @@ describe('SeuGuiaDeHoje', () => {
 
   it('se falhar, avisa e deixa tentar de novo', async () => {
     simularErro(503, { title: 'Serviço indisponível' });
-    await render(<SeuGuiaDeHoje />, { wrapper: comQueryClient().wrapper });
+    await render(<SeuGuiaDoDia />, { wrapper: comQueryClient().wrapper });
 
     expect(await screen.findByText(/Não foi possível preparar seu guia agora/)).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Tentar de novo' })).toBeOnTheScreen();
+  });
+
+  it('começa em hoje e, ao escolher amanhã, pede o guia daquele dia', async () => {
+    const hoje = hojeEmSaoPaulo();
+    const amanha = adicionarDias(hoje, 1);
+    simularResposta({ data: guiaComIa });
+    await render(<SeuGuiaDoDia />, { wrapper: comQueryClient().wrapper });
+
+    await screen.findByText(guiaComIa.resumo);
+    expect(corpoDaUltimaRequisicao()).toEqual({ data: hoje });
+
+    await fireEvent.press(screen.getByRole('tab', { name: formatarDataLonga(amanha) }));
+    await waitFor(() => expect(corpoDaUltimaRequisicao()).toEqual({ data: amanha }));
+    expect(screen.getByRole('tab', { name: formatarDataLonga(amanha) })).toBeSelected();
   });
 });

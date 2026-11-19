@@ -3,7 +3,7 @@ import { MapPin, Phone, TriangleAlert } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { LigarParaContato } from '@/features/guia-calor/components/ligar-para-contato';
-import { SeuGuiaDeHoje } from '@/features/guia-calor/components/seu-guia-de-hoje';
+import { SeuGuiaDoDia } from '@/features/guia-calor/components/seu-guia-do-dia';
 import { CUIDADOS, type Cuidado, O_QUE_FAZER, SINAIS_DE_ALERTA, TELEFONE_SAMU } from '@/features/guia-calor/conteudo';
 import { colors } from '@/theme/colors';
 import { ligarPara } from '@/utils/ligar';
@@ -87,7 +87,7 @@ export default function GuiaCalorScreen() {
         </Text>
       </View>
 
-      <SeuGuiaDeHoje />
+      <SeuGuiaDoDia />
 
       <Text variant="headline" accessibilityRole="header" className="pt-space-sm">
         Cuidados para todos os dias
