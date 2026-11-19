@@ -1,16 +1,12 @@
 import { router } from 'expo-router';
 import { MapPin, Phone, TriangleAlert } from 'lucide-react-native';
-import { Alert as AlertNativo, Linking, View } from 'react-native';
+import { View } from 'react-native';
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { LigarParaContato } from '@/features/guia-calor/components/ligar-para-contato';
 import { SeuGuiaDeHoje } from '@/features/guia-calor/components/seu-guia-de-hoje';
 import { CUIDADOS, type Cuidado, O_QUE_FAZER, SINAIS_DE_ALERTA, TELEFONE_SAMU } from '@/features/guia-calor/conteudo';
 import { colors } from '@/theme/colors';
-
-function ligarParaOSamu() {
-  Linking.openURL(`tel:${TELEFONE_SAMU}`).catch(() =>
-    AlertNativo.alert('Não foi possível ligar', `Disque ${TELEFONE_SAMU} no seu telefone.`),
-  );
-}
+import { ligarPara } from '@/utils/ligar';
 
 function CartaoDeCuidado({ titulo, descricao, Icone }: Cuidado) {
   return (
@@ -71,8 +67,9 @@ function SinaisDeAlerta() {
         variant="danger"
         size="lg"
         accessibilityHint="Abre o telefone para ligar para o SAMU"
-        onPress={ligarParaOSamu}
+        onPress={() => ligarPara(TELEFONE_SAMU)}
       />
+      <LigarParaContato />
     </Card>
   );
 }
