@@ -4,6 +4,7 @@ import { Badge, Card, ProgressBar, Text } from '@/components/ui';
 import { colors } from '@/theme/colors';
 import type { Refugio } from '@/types/refugio';
 import { type DataApi, formatarDataLonga } from '@/utils/date';
+import { comInicialMinuscula } from '@/utils/texto';
 import { calcularDisponibilidade } from '../disponibilidade';
 import { ESTILO_DA_SITUACAO } from '../estilo-da-situacao';
 
@@ -11,10 +12,6 @@ type PainelDeVagasProps = {
   refugio: Refugio;
   data: DataApi;
 };
-
-function emMinusculas(texto: string) {
-  return texto.charAt(0).toLowerCase() + texto.slice(1);
-}
 
 export function PainelDeVagas({ refugio, data }: PainelDeVagasProps) {
   if (!refugio.ativo) {
@@ -35,7 +32,7 @@ export function PainelDeVagas({ refugio, data }: PainelDeVagasProps) {
 
   const disponibilidade = calcularDisponibilidade(refugio);
   const estilo = ESTILO_DA_SITUACAO[disponibilidade.situacao];
-  const quando = emMinusculas(formatarDataLonga(data));
+  const quando = comInicialMinuscula(formatarDataLonga(data));
   const reservadas = refugio.capacidade - refugio.vagasDisponiveis;
 
   return (

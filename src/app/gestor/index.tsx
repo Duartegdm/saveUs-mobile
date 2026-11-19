@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/use-auth';
 import { GestorRefugioCard } from '@/features/gestor/components/gestor-refugio-card';
 import { useAlternarAtivo } from '@/features/gestor/hooks/use-acoes-do-refugio';
 import { descreverResultado, SEGMENTOS_DE_SITUACAO, useFiltrosDoGestor } from '@/features/gestor/hooks/use-filtros-do-gestor';
+import { FiltroData } from '@/features/refugios/components/filtro-data';
 import { SeletorBairro } from '@/features/refugios/components/seletor-bairro';
 import { useRefugios } from '@/features/refugios/hooks/use-refugios';
 import { refugiosDoGestor } from '@/features/refugios/refugio.service';
@@ -74,6 +75,12 @@ export default function GestorRefugiosScreen() {
       <Button label="Cadastrar refúgio" icon={Plus} variant="secondary" size="lg" onPress={cadastrar} />
       <Segmentos segmentos={SEGMENTOS_DE_SITUACAO} selecionado={filtros.situacao} onSelecionar={filtros.setSituacao} />
       <SeletorBairro bairro={filtros.bairro} onEscolher={filtros.escolherBairro} />
+      <View className="gap-2">
+        <Text variant="label" tone="muted">
+          Ver vagas para
+        </Text>
+        <FiltroData hoje={filtros.hoje} datas={filtros.datas} selecionada={filtros.data} onSelecionar={filtros.setData} />
+      </View>
       {consulta.isSuccess && consulta.total > 0 && (
         <Text variant="headline" accessibilityRole="header">
           {descreverResultado(consulta.total, filtros.situacao, filtros.bairro)}
@@ -98,6 +105,8 @@ export default function GestorRefugiosScreen() {
         renderItem={({ item }) => (
           <GestorRefugioCard
             refugio={item}
+            data={filtros.data}
+            hoje={filtros.hoje}
             alternando={alternar.isPending && alternar.variables?.id === item.id}
             onEditar={() => router.push({ pathname: '/gestor/refugio/[id]', params: { id: String(item.id) } })}
             onAlternarAtivo={() => alternar.mutate(item)}

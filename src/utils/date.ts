@@ -1,3 +1,5 @@
+import { comInicialMinuscula } from './texto';
+
 export type DataApi = string;
 
 const OFFSET_SAO_PAULO_MS = -3 * 60 * 60 * 1000;
@@ -57,6 +59,11 @@ export function formatarRotuloDoDia(data: DataApi, hoje: DataApi = hojeEmSaoPaul
 
   const utc = paraUtc(data);
   return `${DIAS_DA_SEMANA_CURTOS[utc.getUTCDay()]}, ${utc.getUTCDate()}`;
+}
+
+export function formatarDiaNaFrase(data: DataApi, hoje: DataApi = hojeEmSaoPaulo()): string {
+  const rotulo = comInicialMinuscula(formatarRotuloDoDia(data, hoje));
+  return data === hoje || data === adicionarDias(hoje, 1) ? rotulo : `em ${rotulo}`;
 }
 
 const doisDigitos = (valor: number) => String(valor).padStart(2, '0');

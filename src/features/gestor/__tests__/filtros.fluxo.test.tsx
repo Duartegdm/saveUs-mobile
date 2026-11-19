@@ -4,6 +4,7 @@ import { descreverResultado } from '@/features/gestor/hooks/use-filtros-do-gesto
 import { requisicoes, simularApi } from '@/test-utils/api-falsa';
 import { umaPagina, umRefugio } from '@/test-utils/fabricas';
 import { comAutenticacao } from '@/test-utils/providers';
+import { adicionarDias, formatarDataLonga, hojeEmSaoPaulo } from '@/utils/date';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
@@ -37,7 +38,8 @@ describe('filtros da lista do gestor', () => {
 
   it('começa mostrando todos, sem filtro', async () => {
     await abrir();
-    expect(ultimosParametros()).toMatchObject({ ativo: undefined, bairro: undefined });
+    expect(ultimosParametros()).toMatchObject({ ativo: undefined, bairro: undefined, data: hojeEmSaoPaulo() });
+    expect(screen.getByText('Vagas hoje')).toBeOnTheScreen();
     expect(screen.getByRole('tab', { name: 'Todos os refúgios' })).toBeSelected();
   });
 
@@ -46,6 +48,16 @@ describe('filtros da lista do gestor', () => {
     await fireEvent.press(screen.getByRole('tab', { name: 'Reservas pausadas' }));
     await waitFor(() => expect(ultimosParametros()).toMatchObject({ ativo: false }));
     expect(requisicoes.at(-1)?.baseURL).toBe('http://java.teste');
+  });
+
+  it('escolher amanhã pede ao Java as vagas daquele dia', async () => {
+    const amanha = adicionarDias(hojeEmSaoPaulo(), 1);
+    await abrir();
+    await fireEvent.press(screen.getByRole('tab', { name: formatarDataLonga(amanha) }));
+
+    await waitFor(() => expect(ultimosParametros()).toMatchObject({ data: amanha }));
+    expect(await screen.findByText('Vagas amanhã')).toBeOnTheScreen();
+    expect(screen.getByLabelText(`12 de 40 vagas livres para ${formatarDataLonga(amanha).toLowerCase()}`)).toBeOnTheScreen();
   });
 
   it('filtra por bairro e, sem resultado, permite limpar os filtros', async () => {

@@ -1,21 +1,29 @@
 import { CircleCheck, CirclePause, Pause, Pencil, Play } from 'lucide-react-native';
 import { View } from 'react-native';
-import { Badge, Button, Card, Text } from '@/components/ui';
+import { Badge, Button, Card, ProgressBar, Text } from '@/components/ui';
 import { TIPO_REFUGIO } from '@/constants/tipo-refugio';
+import { calcularDisponibilidade } from '@/features/refugios/disponibilidade';
+import { ESTILO_DA_SITUACAO } from '@/features/refugios/estilo-da-situacao';
 import { colors } from '@/theme/colors';
 import type { Refugio } from '@/types/refugio';
-import { formatarHora } from '@/utils/date';
+import { type DataApi, formatarDataLonga, formatarDiaNaFrase, formatarHora } from '@/utils/date';
+import { comInicialMinuscula } from '@/utils/texto';
 
 type GestorRefugioCardProps = {
   refugio: Refugio;
+  data: DataApi;
+  hoje: DataApi;
   alternando: boolean;
   onEditar: () => void;
   onAlternarAtivo: () => void;
 };
 
-export function GestorRefugioCard({ refugio, alternando, onEditar, onAlternarAtivo }: GestorRefugioCardProps) {
+export function GestorRefugioCard({ refugio, data, hoje, alternando, onEditar, onAlternarAtivo }: GestorRefugioCardProps) {
   const { rotulo, Icone } = TIPO_REFUGIO[refugio.tipo];
   const horario = `${formatarHora(refugio.abre)} às ${formatarHora(refugio.fecha)}`;
+  const disponibilidade = calcularDisponibilidade(refugio);
+  const estilo = ESTILO_DA_SITUACAO[disponibilidade.situacao];
+  const diaPorExtenso = comInicialMinuscula(formatarDataLonga(data));
 
   return (
     <Card className="gap-4">
@@ -40,13 +48,28 @@ export function GestorRefugioCard({ refugio, alternando, onEditar, onAlternarAti
       )}
 
       <View className="flex-row gap-3">
-        <View className="flex-1 gap-0.5 rounded-xl bg-surface-container-low p-3">
+        <View
+          accessible
+          accessibilityLabel={
+            refugio.ativo
+              ? `${refugio.vagasDisponiveis} de ${refugio.capacidade} vagas livres para ${diaPorExtenso}`
+              : 'Reservas pausadas'
+          }
+          className="flex-1 gap-1 rounded-xl bg-surface-container-low p-3">
           <Text variant="caption" weight="regular" tone="muted">
-            Vagas hoje
+            Vagas {formatarDiaNaFrase(data, hoje)}
           </Text>
           <Text variant="label" weight="bold">
             {refugio.ativo ? `${refugio.vagasDisponiveis} de ${refugio.capacidade}` : 'Pausado'}
           </Text>
+          {refugio.ativo && (
+            <ProgressBar
+              value={disponibilidade.ocupacao}
+              tone={estilo.barra}
+              accessibilityLabel={`${Math.round(disponibilidade.ocupacao * 100)}% ocupado`}
+              className="mt-1 h-1.5"
+            />
+          )}
         </View>
         <View className="flex-1 gap-0.5 rounded-xl bg-surface-container-low p-3">
           <Text variant="caption" weight="regular" tone="muted">

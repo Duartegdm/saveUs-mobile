@@ -3,6 +3,7 @@ import {
   formatarDataCurta,
   formatarDataHora,
   formatarDataLonga,
+  formatarDiaNaFrase,
   formatarHora,
   formatarRotuloDoDia,
   hojeEmSaoPaulo,
@@ -55,6 +56,12 @@ describe('formatação', () => {
     expect(formatarRotuloDoDia('2026-11-13', '2026-11-12')).toBe('Amanhã');
     expect(formatarRotuloDoDia('2026-11-14', '2026-11-12')).toBe('Sáb, 14');
     expect(formatarRotuloDoDia('2026-12-01', '2026-11-30')).toBe('Amanhã');
+  });
+
+  it('dia dentro de uma frase', () => {
+    expect(formatarDiaNaFrase('2026-11-12', '2026-11-12')).toBe('hoje');
+    expect(formatarDiaNaFrase('2026-11-13', '2026-11-12')).toBe('amanhã');
+    expect(formatarDiaNaFrase('2026-11-14', '2026-11-12')).toBe('em sáb, 14');
   });
 
   it.each([
