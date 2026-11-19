@@ -1,4 +1,4 @@
-import { api, ApiError, setAuthToken, setOnUnauthorized } from '@/services/api';
+import { api, ApiError, apiJava, setAuthToken, setOnUnauthorized } from '@/services/api';
 import { requisicoes, simularErro, simularResposta, simularSemRede } from '@/test-utils/api-falsa';
 
 async function falhar(): Promise<ApiError> {
@@ -11,7 +11,8 @@ async function falhar(): Promise<ApiError> {
 }
 
 afterEach(() => {
-  setAuthToken(null);
+  setAuthToken(null, 'net');
+  setAuthToken(null, 'java');
   setOnUnauthorized(null);
 });
 
@@ -62,6 +63,25 @@ describe('sessão', () => {
     setAuthToken('tok123');
     await api.get('/qualquer');
     expect(requisicoes[0].headers.Authorization).toBe('Bearer tok123');
+  });
+
+  it('cada backend recebe o token que ele emitiu', async () => {
+    simularResposta({ data: {} });
+    setAuthToken('tok-net', 'net');
+    setAuthToken('tok-java', 'java');
+    await api.get('/qualquer');
+    await apiJava.get('/qualquer');
+    expect(requisicoes.map((r) => r.headers.Authorization)).toEqual(['Bearer tok-net', 'Bearer tok-java']);
+  });
+
+  it('401 do Java sem token do Java não derruba a sessão do .NET', async () => {
+    const deslogar = jest.fn();
+    setOnUnauthorized(deslogar);
+    setAuthToken('tok-net', 'net');
+    simularErro(401, { title: 'Não autenticado' });
+    await expect(apiJava.get('/qualquer')).rejects.toBeInstanceOf(ApiError);
+    expect(requisicoes[0].headers.Authorization).toBeUndefined();
+    expect(deslogar).not.toHaveBeenCalled();
   });
 
   it('401 de requisição sem token (login errado) não derruba a sessão', async () => {

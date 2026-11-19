@@ -1,17 +1,17 @@
 import { type AxiosInstance, create, isAxiosError } from 'axios';
 import { toApiError } from './errors';
-import { getAuthToken, notifyUnauthorized } from './session';
+import { type Backend, getAuthToken, notifyUnauthorized } from './session';
 
 function urlObrigatoria(nome: string, valor: string | undefined) {
   if (!valor) throw new Error(`Defina ${nome} no arquivo .env.`);
   return valor;
 }
 
-function criarCliente(baseURL: string): AxiosInstance {
+function criarCliente(baseURL: string, backend: Backend): AxiosInstance {
   const cliente = create({ baseURL, timeout: 15_000 });
 
   cliente.interceptors.request.use((config) => {
-    const token = getAuthToken();
+    const token = getAuthToken(backend);
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   });
@@ -31,5 +31,8 @@ function criarCliente(baseURL: string): AxiosInstance {
   return cliente;
 }
 
-export const api = criarCliente(urlObrigatoria('EXPO_PUBLIC_API_URL', process.env.EXPO_PUBLIC_API_URL));
-export const apiJava = criarCliente(urlObrigatoria('EXPO_PUBLIC_JAVA_API_URL', process.env.EXPO_PUBLIC_JAVA_API_URL));
+export const api = criarCliente(urlObrigatoria('EXPO_PUBLIC_API_URL', process.env.EXPO_PUBLIC_API_URL), 'net');
+export const apiJava = criarCliente(
+  urlObrigatoria('EXPO_PUBLIC_JAVA_API_URL', process.env.EXPO_PUBLIC_JAVA_API_URL),
+  'java',
+);

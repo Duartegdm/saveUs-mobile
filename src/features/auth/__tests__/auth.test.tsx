@@ -4,8 +4,8 @@ import { login, registrar } from '@/features/auth/auth.service';
 import { rotaInicial } from '@/features/auth/rota-inicial';
 import { apagarSessao, lerSessao, salvarSessao, sessaoExpirada } from '@/features/auth/session-storage';
 import { useAuth } from '@/features/auth/use-auth';
-import { ApiError } from '@/services/api';
-import { corpoDaUltimaRequisicao, requisicoes, simularErro, simularResposta } from '@/test-utils/api-falsa';
+import { ApiError, apiJava, setAuthToken } from '@/services/api';
+import { corpoDaUltimaRequisicao, requisicoes, simularApi, simularErro, simularResposta } from '@/test-utils/api-falsa';
 import { umUsuario } from '@/test-utils/fabricas';
 import { comAutenticacao } from '@/test-utils/providers';
 
@@ -14,9 +14,22 @@ const memoria = (SecureStore as unknown as { __memoria: Map<string, string> })._
 const { id, nome, email, papel } = umUsuario();
 const usuario = { id, nome, email, papel };
 const daquiAUmaHora = () => new Date(Date.now() + 3_600_000).toISOString();
-const umaSessao = (expiraEm = daquiAUmaHora()) => ({ token: 'jwt.abc', expiraEm, usuario });
+const umaSessao = (expiraEm = daquiAUmaHora()) => ({ token: 'jwt.abc', expiraEm, usuario, tokenJava: 'jwt.java' });
+
+// O .NET e o Java respondem ao login com tokens diferentes, como em produção.
+function simularLoginNosDoisBackends(statusDoJava = 200) {
+  simularApi((config) =>
+    config.baseURL?.includes('java')
+      ? { status: statusDoJava, data: { token: 'jwt.java' } }
+      : { data: { token: 'jwt.net', expiraEm: daquiAUmaHora(), usuario } },
+  );
+}
 
 beforeEach(() => memoria.clear());
+afterEach(() => {
+  setAuthToken(null, 'net');
+  setAuthToken(null, 'java');
+});
 
 describe('armazenamento da sessão', () => {
   it('salva e lê a mesma sessão', async () => {
@@ -29,6 +42,12 @@ describe('armazenamento da sessão', () => {
     memoria.set(CHAVE, '{quebrado');
     expect(await lerSessao()).toBeNull();
     memoria.set(CHAVE, JSON.stringify({ token: 'x' }));
+    expect(await lerSessao()).toBeNull();
+  });
+
+  it('sessão salva sem o token do Java (versão anterior do app) é descartada', async () => {
+    const { tokenJava: _semTokenJava, ...antiga } = umaSessao();
+    memoria.set(CHAVE, JSON.stringify(antiga));
     expect(await lerSessao()).toBeNull();
   });
 
@@ -51,6 +70,21 @@ describe('serviço de autenticação', () => {
     expect(requisicoes[0].url).toBe('/auth/login');
     expect(corpoDaUltimaRequisicao()).toEqual({ email: 'maria@email.com', senha: 'Senha@123' });
     expect(sessao.usuario.papel).toBe('IDOSO');
+  });
+
+  it('login entra nos dois backends e guarda o token de cada um', async () => {
+    simularLoginNosDoisBackends();
+    const sessao = await login({ email: 'gestor@refugio.com', senha: 'Senha@123' });
+    expect(requisicoes.map((r) => r.baseURL).sort()).toEqual(['http://api.teste', 'http://java.teste']);
+    expect(sessao.token).toBe('jwt.net');
+    expect(sessao.tokenJava).toBe('jwt.java');
+  });
+
+  it('se o Java falhar no login, entra só com o .NET', async () => {
+    simularLoginNosDoisBackends(503);
+    const sessao = await login({ email: 'maria@email.com', senha: 'Senha@123' });
+    expect(sessao.token).toBe('jwt.net');
+    expect(sessao.tokenJava).toBeNull();
   });
 
   it('login com resposta fora do contrato falha', async () => {
@@ -104,6 +138,17 @@ describe('AuthProvider', () => {
     await act(() => result.current.sair());
     expect(result.current.status).toBe('anonimo');
     expect(memoria.has(CHAVE)).toBe(false);
+  });
+
+  it('depois de entrar, o backend Java recebe o token emitido por ele', async () => {
+    simularLoginNosDoisBackends();
+    const { result } = await renderHook(() => useAuth(), { wrapper: comAutenticacao().wrapper });
+    await waitFor(() => expect(result.current.status).toBe('anonimo'));
+    await act(() => result.current.entrar({ email: 'gestor@refugio.com', senha: 'Senha@123' }));
+
+    simularResposta({ data: {} });
+    await apiJava.get('/api/v1/refugios');
+    expect(requisicoes[0].headers.Authorization).toBe('Bearer jwt.java');
   });
 
   it('um 401 durante o uso encerra a sessão', async () => {
