@@ -8,7 +8,10 @@ function novoFormulario() {
   const { formControl, control } = createFormControl<Cadastro>({ defaultValues: { nome: '', email: '', senha: '' } });
   const mensagens = () =>
     Object.fromEntries(
-      Object.entries(control._formState.errors).map(([campo, erro]) => [campo, (erro as { message?: string })?.message]),
+      Object.entries(control._formState.errors).map(([campo, erro]) => [
+        campo,
+        (erro as { message?: string })?.message,
+      ]),
     );
   return { form: formControl, mensagens };
 }

@@ -17,7 +17,10 @@ type CartaoComprovanteProps = {
 
 function Dado({ icone: Icone, titulo, valor }: { icone: LucideIcon; titulo: string; valor: string }) {
   return (
-    <View accessible accessibilityLabel={`${titulo}: ${valor}`} className="flex-1 gap-1 rounded-xl bg-surface-container-low p-3">
+    <View
+      accessible
+      accessibilityLabel={`${titulo}: ${valor}`}
+      className="flex-1 gap-1 rounded-xl bg-surface-container-low p-3">
       <View className="flex-row items-center gap-1.5">
         <Icone color={colors['on-surface-variant']} size={16} />
         <Text variant="caption" weight="regular" tone="muted">
@@ -84,7 +87,11 @@ export function CartaoComprovante({ reserva, refugio }: CartaoComprovanteProps) 
             </View>
           </View>
         ) : (
-          <Alert tone="error" title="Reserva cancelada" message="Este comprovante não vale mais para entrar no refúgio." />
+          <Alert
+            tone="error"
+            title="Reserva cancelada"
+            message="Este comprovante não vale mais para entrar no refúgio."
+          />
         )}
 
         <Picote />

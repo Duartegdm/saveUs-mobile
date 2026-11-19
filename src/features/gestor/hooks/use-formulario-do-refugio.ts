@@ -20,10 +20,7 @@ export function useFormularioDoRefugio({ refugio, onSalvo }: Opcoes) {
   const salvar = useSalvarRefugio();
 
   const submeter = form.handleSubmit((dados) =>
-    salvar.mutate(
-      { id: refugio?.id, dados },
-      { onSuccess: onSalvo, onError: (erro) => applyApiErrors(erro, form) },
-    ),
+    salvar.mutate({ id: refugio?.id, dados }, { onSuccess: onSalvo, onError: (erro) => applyApiErrors(erro, form) }),
   );
 
   return { form, cep, enviar: () => void submeter(), salvando: salvar.isPending };

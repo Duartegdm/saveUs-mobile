@@ -50,7 +50,11 @@ it('excesso de tentativas bloqueia o botão com contagem', async () => {
 it('login certo salva a sessão', async () => {
   const { id, nome, email, papel } = umUsuario();
   simularResposta({
-    data: { token: 'jwt.abc', expiraEm: new Date(Date.now() + 3_600_000).toISOString(), usuario: { id, nome, email, papel } },
+    data: {
+      token: 'jwt.abc',
+      expiraEm: new Date(Date.now() + 3_600_000).toISOString(),
+      usuario: { id, nome, email, papel },
+    },
   });
   await abrirLogin();
   await preencherEEntrar();

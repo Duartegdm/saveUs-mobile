@@ -24,4 +24,7 @@ jest.mock('expo-crypto', () => ({
   randomUUID: () => jest.requireActual<{ randomUUID: () => string }>('crypto').randomUUID(),
 }));
 
-jest.mock('react-native-safe-area-context', () => jest.requireActual('react-native-safe-area-context/jest/mock').default);
+jest.mock(
+  'react-native-safe-area-context',
+  () => jest.requireActual('react-native-safe-area-context/jest/mock').default,
+);

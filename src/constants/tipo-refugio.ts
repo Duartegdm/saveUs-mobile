@@ -1,13 +1,4 @@
-import {
-  Building2,
-  Church,
-  Library,
-  type LucideIcon,
-  MapPin,
-  School,
-  Stethoscope,
-  Users,
-} from 'lucide-react-native';
+import { Building2, Church, Library, type LucideIcon, MapPin, School, Stethoscope, Users } from 'lucide-react-native';
 
 import type { TipoRefugio } from '@/types/refugio';
 

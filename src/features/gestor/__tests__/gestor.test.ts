@@ -76,7 +76,13 @@ describe('serviços do gestor (backend Java)', () => {
 
   it('consulta o CEP só com os dígitos', async () => {
     simularResposta({
-      data: { cep: '03601-000', endereco: 'Rua Padre Benedito de Camargo', bairro: 'Penha', cidade: 'São Paulo', uf: 'SP' },
+      data: {
+        cep: '03601-000',
+        endereco: 'Rua Padre Benedito de Camargo',
+        bairro: 'Penha',
+        cidade: 'São Paulo',
+        uf: 'SP',
+      },
     });
     const endereco = await consultarCep('03601-000');
     expect([requisicoes[0].baseURL, requisicoes[0].url]).toEqual(['http://java.teste', '/api/v1/cep/03601000']);

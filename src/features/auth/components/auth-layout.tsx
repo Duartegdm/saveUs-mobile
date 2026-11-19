@@ -63,16 +63,8 @@ function OndasDeBrisa() {
       importantForAccessibility="no-hide-descendants"
       className="absolute left-0 right-0 top-0 h-72">
       <Svg width="100%" height="100%" viewBox="0 0 400 280" preserveAspectRatio="none">
-        <Path
-          d="M0 0H400V168C352 206 300 140 222 168C144 196 86 132 0 178Z"
-          fill={colors.breeze}
-          opacity={0.18}
-        />
-        <Path
-          d="M0 0H400V108C344 146 292 86 212 112C132 138 78 92 0 124Z"
-          fill={colors.breeze}
-          opacity={0.22}
-        />
+        <Path d="M0 0H400V168C352 206 300 140 222 168C144 196 86 132 0 178Z" fill={colors.breeze} opacity={0.18} />
+        <Path d="M0 0H400V108C344 146 292 86 212 112C132 138 78 92 0 124Z" fill={colors.breeze} opacity={0.22} />
       </Svg>
     </View>
   );

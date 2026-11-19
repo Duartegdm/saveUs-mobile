@@ -57,7 +57,9 @@ describe('filtros da lista do gestor', () => {
 
     await waitFor(() => expect(ultimosParametros()).toMatchObject({ data: amanha }));
     expect(await screen.findByText('Vagas amanhã')).toBeOnTheScreen();
-    expect(screen.getByLabelText(`12 de 40 vagas livres para ${formatarDataLonga(amanha).toLowerCase()}`)).toBeOnTheScreen();
+    expect(
+      screen.getByLabelText(`12 de 40 vagas livres para ${formatarDataLonga(amanha).toLowerCase()}`),
+    ).toBeOnTheScreen();
   });
 
   it('filtra por bairro e, sem resultado, permite limpar os filtros', async () => {

@@ -35,7 +35,8 @@ export function usePreencherPorCep(form: UseFormReturn<RefugioForm, unknown, Ref
     consultar(cep);
   }, [cep, consultar]);
 
-  const falhouSemResposta = consulta.error instanceof ApiError && consulta.error.status !== 404 && consulta.error.status !== 400;
+  const falhouSemResposta =
+    consulta.error instanceof ApiError && consulta.error.status !== 404 && consulta.error.status !== 400;
 
   return {
     buscando: consulta.isPending,

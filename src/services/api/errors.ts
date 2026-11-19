@@ -46,9 +46,7 @@ function semResposta(code: string | undefined): ApiError {
 }
 
 function primeiraMensagemPorCampo(errors: ProblemDetails['errors']): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(errors ?? {}).map(([campo, mensagens]) => [campo, mensagens[0] ?? '']),
-  );
+  return Object.fromEntries(Object.entries(errors ?? {}).map(([campo, mensagens]) => [campo, mensagens[0] ?? '']));
 }
 
 export function toApiError(error: unknown): ApiError {
@@ -67,9 +65,7 @@ export function toApiError(error: unknown): ApiError {
     status,
     title: problema.title ?? 'Erro no servidor',
     detail:
-      problema.detail ??
-      Object.values(fieldErrors)[0] ??
-      (status >= 500 ? MENSAGEM_PADRAO_5XX : MENSAGEM_PADRAO_4XX),
+      problema.detail ?? Object.values(fieldErrors)[0] ?? (status >= 500 ? MENSAGEM_PADRAO_5XX : MENSAGEM_PADRAO_4XX),
     fieldErrors,
     retryAfter: Number.isFinite(retryAfter) ? retryAfter : null,
   });

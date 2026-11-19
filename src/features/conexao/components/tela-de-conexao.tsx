@@ -7,8 +7,7 @@ import { colors } from '@/theme/colors';
 const logo = require('../../../../assets/images/logo.png');
 
 type TelaDeConexaoProps =
-  | { estado: 'conectando' }
-  | { estado: 'falhou'; onTentarDeNovo: () => void; onContinuar: () => void };
+  { estado: 'conectando' } | { estado: 'falhou'; onTentarDeNovo: () => void; onContinuar: () => void };
 
 export function TelaDeConexao(props: TelaDeConexaoProps) {
   const conectando = props.estado === 'conectando';

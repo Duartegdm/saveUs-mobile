@@ -18,7 +18,14 @@ type GestorRefugioCardProps = {
   onAlternarAtivo: () => void;
 };
 
-export function GestorRefugioCard({ refugio, data, hoje, alternando, onEditar, onAlternarAtivo }: GestorRefugioCardProps) {
+export function GestorRefugioCard({
+  refugio,
+  data,
+  hoje,
+  alternando,
+  onEditar,
+  onAlternarAtivo,
+}: GestorRefugioCardProps) {
   const { rotulo, Icone } = TIPO_REFUGIO[refugio.tipo];
   const horario = `${formatarHora(refugio.abre)} às ${formatarHora(refugio.fecha)}`;
   const disponibilidade = calcularDisponibilidade(refugio);

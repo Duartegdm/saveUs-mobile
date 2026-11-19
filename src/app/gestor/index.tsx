@@ -6,7 +6,11 @@ import { Alert, Button, Screen, Segmentos, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/use-auth';
 import { GestorRefugioCard } from '@/features/gestor/components/gestor-refugio-card';
 import { useAlternarAtivo } from '@/features/gestor/hooks/use-acoes-do-refugio';
-import { descreverResultado, SEGMENTOS_DE_SITUACAO, useFiltrosDoGestor } from '@/features/gestor/hooks/use-filtros-do-gestor';
+import {
+  descreverResultado,
+  SEGMENTOS_DE_SITUACAO,
+  useFiltrosDoGestor,
+} from '@/features/gestor/hooks/use-filtros-do-gestor';
 import { FiltroData } from '@/features/refugios/components/filtro-data';
 import { SeletorBairro } from '@/features/refugios/components/seletor-bairro';
 import { useRefugios } from '@/features/refugios/hooks/use-refugios';
@@ -79,7 +83,12 @@ export default function GestorRefugiosScreen() {
         <Text variant="label" tone="muted">
           Ver vagas para
         </Text>
-        <FiltroData hoje={filtros.hoje} datas={filtros.datas} selecionada={filtros.data} onSelecionar={filtros.setData} />
+        <FiltroData
+          hoje={filtros.hoje}
+          datas={filtros.datas}
+          selecionada={filtros.data}
+          onSelecionar={filtros.setData}
+        />
       </View>
       {consulta.isSuccess && consulta.total > 0 && (
         <Text variant="headline" accessibilityRole="header">

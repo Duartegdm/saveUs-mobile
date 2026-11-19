@@ -6,7 +6,13 @@ import { colors } from '@/theme/colors';
 type EstadoDaListaProps =
   | { tipo: 'carregando'; mensagem: string }
   | { tipo: 'erro'; mensagem: string; onTentarDeNovo: () => void }
-  | { tipo: 'vazio'; titulo: string; mensagem: string; icone: LucideIcon; acao?: { rotulo: string; onPress: () => void } };
+  | {
+      tipo: 'vazio';
+      titulo: string;
+      mensagem: string;
+      icone: LucideIcon;
+      acao?: { rotulo: string; onPress: () => void };
+    };
 
 export function EstadoDaLista(props: EstadoDaListaProps) {
   if (props.tipo === 'carregando') {

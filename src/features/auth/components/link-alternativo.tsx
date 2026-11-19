@@ -14,7 +14,10 @@ export function LinkAlternativo({ pergunta, acao, href, dismissTo = false }: Lin
     <View className="flex-row flex-wrap items-center justify-center">
       <Text tone="muted">{pergunta}</Text>
       <Link href={href} dismissTo={dismissTo} asChild>
-        <Pressable accessibilityRole="link" accessibilityLabel={`${pergunta} ${acao}`} className="min-h-12 justify-center px-2">
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel={`${pergunta} ${acao}`}
+          className="min-h-12 justify-center px-2">
           <Text variant="label" weight="bold" tone="secondary">
             {acao}
           </Text>

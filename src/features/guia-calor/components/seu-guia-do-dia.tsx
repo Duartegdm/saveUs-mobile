@@ -66,7 +66,11 @@ function ConteudoDoGuia({ data }: { data: DataApi }) {
 
       <View className="gap-3">
         {dicas.map((dica) => (
-          <View key={dica.titulo} accessible accessibilityLabel={`${dica.titulo}. ${dica.descricao}`} className="gap-0.5">
+          <View
+            key={dica.titulo}
+            accessible
+            accessibilityLabel={`${dica.titulo}. ${dica.descricao}`}
+            className="gap-0.5">
             <Text variant="label" weight="bold" tone="secondary">
               {dica.titulo}
             </Text>

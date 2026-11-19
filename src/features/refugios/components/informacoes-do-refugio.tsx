@@ -14,7 +14,10 @@ type LinhaProps = {
 
 function Linha({ icone: Icone, titulo, valor, detalhe }: LinhaProps) {
   return (
-    <View accessible accessibilityLabel={[titulo, valor, detalhe].filter(Boolean).join('. ')} className="flex-row gap-3">
+    <View
+      accessible
+      accessibilityLabel={[titulo, valor, detalhe].filter(Boolean).join('. ')}
+      className="flex-row gap-3">
       <View className="h-10 w-10 items-center justify-center rounded-lg bg-surface-container-low">
         <Icone color={colors.secondary} size={20} />
       </View>
@@ -39,7 +42,12 @@ export function InformacoesDoRefugio({ refugio }: { refugio: Refugio }) {
       <Text variant="headline" accessibilityRole="header">
         Informações do local
       </Text>
-      <Linha icone={MapPin} titulo="Endereço" valor={refugio.endereco} detalhe={`${refugio.bairro}, CEP ${refugio.cep}`} />
+      <Linha
+        icone={MapPin}
+        titulo="Endereço"
+        valor={refugio.endereco}
+        detalhe={`${refugio.bairro}, CEP ${refugio.cep}`}
+      />
       <Linha
         icone={Clock}
         titulo="Funcionamento"

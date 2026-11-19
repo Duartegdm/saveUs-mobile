@@ -10,7 +10,6 @@ export type LoginResponse = z.infer<typeof loginResponseSchema>;
 
 export const loginJavaResponseSchema = z.object({ token: z.string() });
 
-// Sessão salva: login do .NET mais o token do backend Java (null se o Java não respondeu no login).
 export const sessaoSchema = loginResponseSchema.extend({ tokenJava: z.string().nullable() });
 export type Sessao = z.infer<typeof sessaoSchema>;
 
@@ -32,8 +31,16 @@ export const REGRAS_SENHA: RegraSenha[] = [
     mensagem: 'A senha deve ter entre 8 e 100 caracteres.',
     atende: (senha) => senha.length >= 8 && senha.length <= 100,
   },
-  { rotulo: 'uma letra maiúscula', mensagem: 'A senha deve ter uma letra maiúscula.', atende: (senha) => /[A-Z]/.test(senha) },
-  { rotulo: 'uma letra minúscula', mensagem: 'A senha deve ter uma letra minúscula.', atende: (senha) => /[a-z]/.test(senha) },
+  {
+    rotulo: 'uma letra maiúscula',
+    mensagem: 'A senha deve ter uma letra maiúscula.',
+    atende: (senha) => /[A-Z]/.test(senha),
+  },
+  {
+    rotulo: 'uma letra minúscula',
+    mensagem: 'A senha deve ter uma letra minúscula.',
+    atende: (senha) => /[a-z]/.test(senha),
+  },
   { rotulo: 'um número', mensagem: 'A senha deve ter um número.', atende: (senha) => /[0-9]/.test(senha) },
 ];
 

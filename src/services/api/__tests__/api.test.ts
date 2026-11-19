@@ -18,7 +18,10 @@ afterEach(() => {
 
 describe('normalização de erros', () => {
   it('400 traz o primeiro erro de cada campo e usa-o como mensagem', async () => {
-    simularErro(400, { title: 'Dados inválidos', errors: { dataReserva: ['A data da reserva não pode estar no passado.'] } });
+    simularErro(400, {
+      title: 'Dados inválidos',
+      errors: { dataReserva: ['A data da reserva não pode estar no passado.'] },
+    });
     const erro = await falhar();
     expect(erro.status).toBe(400);
     expect(erro.fieldErrors).toEqual({ dataReserva: 'A data da reserva não pode estar no passado.' });

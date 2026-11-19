@@ -6,7 +6,10 @@ type Responder = (config: InternalAxiosRequestConfig) => Resposta | Promise<Resp
 
 export const requisicoes: InternalAxiosRequestConfig[] = [];
 
-function respostaHttp(config: InternalAxiosRequestConfig, { status = 200, data = {}, headers = {} }: Resposta): AxiosResponse {
+function respostaHttp(
+  config: InternalAxiosRequestConfig,
+  { status = 200, data = {}, headers = {} }: Resposta,
+): AxiosResponse {
   return { status, data, headers, statusText: '', config };
 }
 
@@ -28,7 +31,11 @@ export function simularResposta(resposta: Resposta) {
   simularApi(() => resposta);
 }
 
-export function simularErro(status: number, problema: Record<string, unknown> = {}, headers: Record<string, string> = {}) {
+export function simularErro(
+  status: number,
+  problema: Record<string, unknown> = {},
+  headers: Record<string, string> = {},
+) {
   simularApi(() => ({ status, data: { status, ...problema }, headers }));
 }
 

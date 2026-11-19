@@ -18,12 +18,7 @@ export function LigarParaContato() {
         <Text variant="bodySm" tone="muted">
           Cadastre um contato de emergência para ligar para ele com um toque.
         </Text>
-        <Button
-          label="Cadastrar contato"
-          icon={UserRound}
-          variant="tonal"
-          onPress={() => router.navigate('/perfil')}
-        />
+        <Button label="Cadastrar contato" icon={UserRound} variant="tonal" onPress={() => router.navigate('/perfil')} />
       </View>
     );
   }

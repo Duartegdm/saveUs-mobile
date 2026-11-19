@@ -9,7 +9,10 @@ type Filtros = Pick<ListarRefugiosQuery, 'bairro' | 'data' | 'ativo'>;
 
 type Opcoes = { enabled?: boolean; servico?: ServicoDeRefugios };
 
-export function useRefugios({ bairro, data, ativo }: Filtros, { enabled = true, servico = refugiosDoIdoso }: Opcoes = {}) {
+export function useRefugios(
+  { bairro, data, ativo }: Filtros,
+  { enabled = true, servico = refugiosDoIdoso }: Opcoes = {},
+) {
   const filtros = { bairro, data, ativo, tamanho: TAMANHO_DA_PAGINA };
 
   const consulta = useInfiniteQuery({

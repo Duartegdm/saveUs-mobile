@@ -17,7 +17,10 @@ export function ReservaCard({ reserva, hoje, onVerComprovante, onCancelar }: Res
 
   return (
     <Card className="gap-4">
-      <View accessible accessibilityLabel={`${quando}. ${reserva.refugioNome}. ${reserva.refugioEndereco}`} className="flex-row gap-3">
+      <View
+        accessible
+        accessibilityLabel={`${quando}. ${reserva.refugioNome}. ${reserva.refugioEndereco}`}
+        className="flex-row gap-3">
         <View className="h-12 w-12 items-center justify-center rounded-xl bg-secondary-container">
           <CalendarDays color={colors['on-secondary-container']} size={22} />
         </View>

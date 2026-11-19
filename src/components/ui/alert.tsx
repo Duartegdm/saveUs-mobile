@@ -13,8 +13,18 @@ const TONS = {
     cor: colors['on-secondary-container'],
     Icone: CircleCheck,
   },
-  warning: { fundo: 'bg-tertiary-fixed', tom: 'onTertiaryFixed', cor: colors['on-tertiary-fixed'], Icone: TriangleAlert },
-  error: { fundo: 'bg-error-container', tom: 'onErrorContainer', cor: colors['on-error-container'], Icone: CircleAlert },
+  warning: {
+    fundo: 'bg-tertiary-fixed',
+    tom: 'onTertiaryFixed',
+    cor: colors['on-tertiary-fixed'],
+    Icone: TriangleAlert,
+  },
+  error: {
+    fundo: 'bg-error-container',
+    tom: 'onErrorContainer',
+    cor: colors['on-error-container'],
+    Icone: CircleAlert,
+  },
 } as const satisfies Record<string, { fundo: string; tom: TextTone; cor: string; Icone: LucideIcon }>;
 
 export type AlertTone = keyof typeof TONS;

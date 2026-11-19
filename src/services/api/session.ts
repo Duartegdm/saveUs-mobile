@@ -1,4 +1,3 @@
-// Cada backend assina o próprio JWT, então cada cliente envia o token que o seu backend emitiu.
 export type Backend = 'net' | 'java';
 
 const tokens: Record<Backend, string | null> = { net: null, java: null };

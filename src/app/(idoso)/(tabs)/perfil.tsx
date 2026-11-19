@@ -122,7 +122,7 @@ export default function PerfilScreen() {
           name="contatoEmergenciaNome"
           label="Nome do contato"
           icon={UserRound}
-          placeholder="Ex.: João Souza (filho)" 
+          placeholder="Ex.: João Souza (filho)"
           maxLength={150}
           autoCapitalize="words"
           hint="Alguém de confiança, como um familiar ou vizinho."

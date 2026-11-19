@@ -3,9 +3,7 @@ import type { LoginRequest } from '@/types/auth';
 import type { UsuarioResumo } from '@/types/usuario';
 
 export type AuthState =
-  | { status: 'carregando' }
-  | { status: 'anonimo' }
-  | { status: 'autenticado'; usuario: UsuarioResumo };
+  { status: 'carregando' } | { status: 'anonimo' } | { status: 'autenticado'; usuario: UsuarioResumo };
 
 export type AuthContextValue = AuthState & {
   entrar: (credenciais: LoginRequest) => Promise<void>;

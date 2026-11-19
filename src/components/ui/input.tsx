@@ -45,7 +45,11 @@ export function Input({
       <View className="flex-row items-center justify-between">
         <Text variant="label">
           {label}
-          {required && <Text variant="label" tone="error">{' *'}</Text>}
+          {required && (
+            <Text variant="label" tone="error">
+              {' *'}
+            </Text>
+          )}
         </Text>
         {showCounter && maxLength !== undefined && (
           <Text variant="caption" tone="muted">

@@ -36,7 +36,10 @@ export function SeletorDeTipo({ control }: { control: Control<RefugioForm, unkno
                     'min-h-12 flex-row items-center gap-2 rounded-xl border-[1.5px] px-3',
                     selecionado ? 'border-secondary bg-secondary-container' : 'border-outline-variant',
                   )}>
-                  <Icone color={selecionado ? colors['on-secondary-container'] : colors['on-surface-variant']} size={18} />
+                  <Icone
+                    color={selecionado ? colors['on-secondary-container'] : colors['on-surface-variant']}
+                    size={18}
+                  />
                   <Text variant="label" tone={selecionado ? 'onSecondaryContainer' : 'default'}>
                     {rotulo}
                   </Text>

@@ -67,7 +67,9 @@ describe('ReservaCard', () => {
 
     expect(screen.getByText('Hoje')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Cancelar a reserva em Biblioteca Municipal da Penha' }));
-    await fireEvent.press(screen.getByRole('button', { name: 'Ver comprovante da reserva em Biblioteca Municipal da Penha' }));
+    await fireEvent.press(
+      screen.getByRole('button', { name: 'Ver comprovante da reserva em Biblioteca Municipal da Penha' }),
+    );
     expect(onCancelar).toHaveBeenCalled();
     expect(onVerComprovante).toHaveBeenCalled();
   });

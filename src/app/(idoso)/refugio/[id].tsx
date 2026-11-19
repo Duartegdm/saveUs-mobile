@@ -57,9 +57,7 @@ function BarraDeReserva({ refugio, data }: { refugio: Refugio; data: DataApi }) 
 
   return (
     <>
-      {erro && (
-        <Alert tone="error" title={erro instanceof ApiError ? erro.title : undefined} message={erro.message} />
-      )}
+      {erro && <Alert tone="error" title={erro instanceof ApiError ? erro.title : undefined} message={erro.message} />}
       <Button
         label="Reservar vaga"
         icon={CalendarCheck}

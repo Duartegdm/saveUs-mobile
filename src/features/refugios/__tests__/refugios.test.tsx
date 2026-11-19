@@ -7,7 +7,8 @@ import { umaPagina, umRefugio } from '@/test-utils/fabricas';
 import { comQueryClient } from '@/test-utils/providers';
 
 describe('calcularDisponibilidade', () => {
-  const vagas = (capacidade: number, vagasDisponiveis: number) => calcularDisponibilidade({ capacidade, vagasDisponiveis });
+  const vagas = (capacidade: number, vagasDisponiveis: number) =>
+    calcularDisponibilidade({ capacidade, vagasDisponiveis });
 
   it('livre com folga', () => {
     expect(vagas(40, 40)).toEqual({ situacao: 'livre', rotulo: '40 vagas livres', ocupacao: 0 });
@@ -34,7 +35,13 @@ describe('listar refúgios do idoso', () => {
     simularResposta({ data: umaPagina([umRefugio()]) });
     await refugiosDoIdoso.listar({ data: '2026-11-27', ativo: true, tamanho: 10, pagina: 1, bairro: undefined });
     expect(requisicoes[0].baseURL).toBe('http://api.teste');
-    expect(requisicoes[0].params).toEqual({ data: '2026-11-27', ativo: true, tamanho: 10, pagina: 1, bairro: undefined });
+    expect(requisicoes[0].params).toEqual({
+      data: '2026-11-27',
+      ativo: true,
+      tamanho: 10,
+      pagina: 1,
+      bairro: undefined,
+    });
   });
 
   it('recusa resposta fora do contrato', async () => {

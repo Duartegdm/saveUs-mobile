@@ -34,6 +34,17 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "icon": "./assets/images/icon.png"
+    "icon": "./assets/images/icon.png",
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "c6ee877d-3349-4d4d-8ed1-849c73e0b203"
+      }
+    },
+    "owner": "annaclrl"
   }
 }

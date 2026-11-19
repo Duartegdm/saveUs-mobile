@@ -15,7 +15,8 @@ export const CUIDADOS: Cuidado[] = [
   },
   {
     titulo: 'Evite o sol forte',
-    descricao: 'Entre 10h e 16h, prefira ficar em lugares frescos e com sombra. Deixe passeios e compras para o começo da manhã.',
+    descricao:
+      'Entre 10h e 16h, prefira ficar em lugares frescos e com sombra. Deixe passeios e compras para o começo da manhã.',
     Icone: Sun,
   },
   {
@@ -36,7 +37,8 @@ export const CUIDADOS: Cuidado[] = [
   },
   {
     titulo: 'Combine com alguém',
-    descricao: 'Peça para um familiar ou vizinho falar com você nos dias mais quentes. Se puder, faça o mesmo por outra pessoa.',
+    descricao:
+      'Peça para um familiar ou vizinho falar com você nos dias mais quentes. Se puder, faça o mesmo por outra pessoa.',
     Icone: Users,
   },
 ];
