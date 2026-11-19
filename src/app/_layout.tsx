@@ -14,6 +14,9 @@ import { useEffect } from 'react';
 import { AuthProvider } from '@/features/auth/auth-provider';
 import { rotaInicial } from '@/features/auth/rota-inicial';
 import { useAuth } from '@/features/auth/use-auth';
+import { TelaDeConexao } from '@/features/conexao/components/tela-de-conexao';
+import { useConexaoComServidores } from '@/features/conexao/hooks/use-conexao-com-servidores';
+import { useAposAtraso } from '@/hooks/use-apos-atraso';
 import { queryClient } from '@/services/query-client';
 import { colors } from '@/theme/colors';
 
@@ -39,14 +42,29 @@ export default function RootLayout() {
   );
 }
 
+const ATRASO_DO_AVISO_DE_CONEXAO_MS = 1200;
+
 function RootNavigator() {
   const auth = useAuth();
+  const conexao = useConexaoComServidores();
+  const mostrarAvisoDeConexao = useAposAtraso(ATRASO_DO_AVISO_DE_CONEXAO_MS);
+
+  const sessaoPronta = auth.status !== 'carregando';
+  const podeMostrarTela = conexao.estado !== 'conectando' || mostrarAvisoDeConexao;
 
   useEffect(() => {
-    if (auth.status !== 'carregando') SplashScreen.hideAsync();
-  }, [auth.status]);
+    if (sessaoPronta && podeMostrarTela) SplashScreen.hideAsync();
+  }, [sessaoPronta, podeMostrarTela]);
 
-  if (auth.status === 'carregando') return null;
+  if (!sessaoPronta || !podeMostrarTela) return null;
+
+  if (conexao.estado === 'conectando') return <TelaDeConexao estado="conectando" />;
+
+  if (conexao.estado === 'falhou') {
+    return (
+      <TelaDeConexao estado="falhou" onTentarDeNovo={conexao.tentarDeNovo} onContinuar={conexao.continuarMesmoAssim} />
+    );
+  }
 
   const papel = auth.status === 'autenticado' ? auth.usuario.papel : null;
   const destino = rotaInicial(papel);
