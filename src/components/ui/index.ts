@@ -6,4 +6,5 @@ export { FolhaInferior, type FolhaInferiorProps } from './folha-inferior';
 export { Input, type InputProps } from './input';
 export { ProgressBar, type ProgressBarProps } from './progress-bar';
 export { Screen, type ScreenProps } from './screen';
+export { type Segmento, Segmentos, type SegmentosProps } from './segmentos';
 export { Text, type TextProps, type TextTone, type TextVariant, type TextWeight } from './text';

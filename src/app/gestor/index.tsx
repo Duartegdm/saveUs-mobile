@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
-import { Building2, Plus } from 'lucide-react-native';
+import { Building2, Plus, SearchX } from 'lucide-react-native';
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { EstadoDaLista } from '@/components/estado-da-lista';
-import { Alert, Button, Screen, Text } from '@/components/ui';
+import { Alert, Button, Screen, Segmentos, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/use-auth';
 import { GestorRefugioCard } from '@/features/gestor/components/gestor-refugio-card';
 import { useAlternarAtivo } from '@/features/gestor/hooks/use-acoes-do-refugio';
+import { descreverResultado, SEGMENTOS_DE_SITUACAO, useFiltrosDoGestor } from '@/features/gestor/hooks/use-filtros-do-gestor';
+import { SeletorBairro } from '@/features/refugios/components/seletor-bairro';
 import { useRefugios } from '@/features/refugios/hooks/use-refugios';
 import { refugiosDoGestor } from '@/features/refugios/refugio.service';
 import { ApiError } from '@/services/api';
@@ -17,19 +19,29 @@ function Separador() {
   return <View className="h-space-md" />;
 }
 
-function descreverTotal(total: number) {
-  return total === 1 ? '1 refúgio cadastrado' : `${total} refúgios cadastrados`;
-}
-
 type EstadoDoGestorProps = {
   carregando: boolean;
   erro: Error | null;
+  temFiltro: boolean;
   onTentarDeNovo: () => void;
+  onLimparFiltros: () => void;
 };
 
-function EstadoDoGestor({ carregando, erro, onTentarDeNovo }: EstadoDoGestorProps) {
+function EstadoDoGestor({ carregando, erro, temFiltro, onTentarDeNovo, onLimparFiltros }: EstadoDoGestorProps) {
   if (carregando) return <EstadoDaLista tipo="carregando" mensagem="Buscando os refúgios..." />;
   if (erro) return <EstadoDaLista tipo="erro" mensagem={erro.message} onTentarDeNovo={onTentarDeNovo} />;
+
+  if (temFiltro) {
+    return (
+      <EstadoDaLista
+        tipo="vazio"
+        icone={SearchX}
+        titulo="Nenhum refúgio encontrado"
+        mensagem="Nenhum refúgio corresponde aos filtros escolhidos."
+        acao={{ rotulo: 'Limpar filtros', onPress: onLimparFiltros }}
+      />
+    );
+  }
 
   return (
     <EstadoDaLista
@@ -44,7 +56,8 @@ function EstadoDoGestor({ carregando, erro, onTentarDeNovo }: EstadoDoGestorProp
 
 export default function GestorRefugiosScreen() {
   const auth = useAuth();
-  const consulta = useRefugios({}, { servico: refugiosDoGestor });
+  const filtros = useFiltrosDoGestor();
+  const consulta = useRefugios(filtros.filtros, { servico: refugiosDoGestor });
   const alternar = useAlternarAtivo();
 
   const primeiroNome = auth.status === 'autenticado' ? auth.usuario.nome.split(' ')[0] : '';
@@ -56,9 +69,16 @@ export default function GestorRefugiosScreen() {
         <Text variant="display" tone="primary">
           Olá, {primeiroNome}
         </Text>
-        <Text tone="muted">{consulta.isSuccess ? descreverTotal(consulta.total) : 'Gestão de refúgios'}</Text>
+        <Text tone="muted">Gestão de refúgios</Text>
       </View>
       <Button label="Cadastrar refúgio" icon={Plus} variant="secondary" size="lg" onPress={cadastrar} />
+      <Segmentos segmentos={SEGMENTOS_DE_SITUACAO} selecionado={filtros.situacao} onSelecionar={filtros.setSituacao} />
+      <SeletorBairro bairro={filtros.bairro} onEscolher={filtros.escolherBairro} />
+      {consulta.isSuccess && consulta.total > 0 && (
+        <Text variant="headline" accessibilityRole="header">
+          {descreverResultado(consulta.total, filtros.situacao, filtros.bairro)}
+        </Text>
+      )}
       {erroAoAlternar && (
         <Alert
           tone="error"
@@ -88,7 +108,9 @@ export default function GestorRefugiosScreen() {
           <EstadoDoGestor
             carregando={consulta.isPending}
             erro={consulta.error}
+            temFiltro={filtros.temFiltro}
             onTentarDeNovo={() => void consulta.refetch()}
+            onLimparFiltros={filtros.limpar}
           />
         }
         ListFooterComponent={
