@@ -1,9 +1,9 @@
 import * as SecureStore from 'expo-secure-store';
-import { type LoginResponse, loginResponseSchema } from '@/types/auth';
+import { type Sessao, sessaoSchema } from '@/types/auth';
 
 const CHAVE_SESSAO = 'saveus.sessao';
 
-export type Sessao = LoginResponse;
+export type { Sessao };
 
 export async function salvarSessao(sessao: Sessao) {
   await SecureStore.setItemAsync(CHAVE_SESSAO, JSON.stringify(sessao));
@@ -14,7 +14,7 @@ export async function lerSessao(): Promise<Sessao | null> {
     const salva = await SecureStore.getItemAsync(CHAVE_SESSAO);
     if (!salva) return null;
 
-    const resultado = loginResponseSchema.safeParse(JSON.parse(salva));
+    const resultado = sessaoSchema.safeParse(JSON.parse(salva));
     return resultado.success ? resultado.data : null;
   } catch {
     return null;

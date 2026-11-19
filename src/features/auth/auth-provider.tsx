@@ -4,14 +4,19 @@ import { setAuthToken, setOnUnauthorized } from '@/services/api';
 import type { LoginRequest } from '@/types/auth';
 import { login } from './auth.service';
 import { AuthContext, type AuthContextValue, type AuthState } from './auth-context';
-import { apagarSessao, lerSessao, salvarSessao, sessaoExpirada } from './session-storage';
+import { apagarSessao, lerSessao, type Sessao, salvarSessao, sessaoExpirada } from './session-storage';
+
+function usarTokens(sessao: Sessao | null) {
+  setAuthToken(sessao?.token ?? null, 'net');
+  setAuthToken(sessao?.tokenJava ?? null, 'java');
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [estado, setEstado] = useState<AuthState>({ status: 'carregando' });
 
   const sair = useCallback(async () => {
-    setAuthToken(null);
+    usarTokens(null);
     setEstado({ status: 'anonimo' });
     queryClient.clear();
     await apagarSessao();
@@ -22,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const sessao = await login(credenciais);
       await salvarSessao(sessao);
       queryClient.clear();
-      setAuthToken(sessao.token);
+      usarTokens(sessao);
       setEstado({ status: 'autenticado', usuario: sessao.usuario });
     },
     [queryClient],
@@ -40,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!montado) return;
 
       if (sessao && !sessaoExpirada(sessao)) {
-        setAuthToken(sessao.token);
+        usarTokens(sessao);
         setEstado({ status: 'autenticado', usuario: sessao.usuario });
         return;
       }

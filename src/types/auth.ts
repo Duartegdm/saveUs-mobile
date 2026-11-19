@@ -8,6 +8,12 @@ export const loginResponseSchema = z.object({
 });
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
 
+export const loginJavaResponseSchema = z.object({ token: z.string() });
+
+// Sessão salva: login do .NET mais o token do backend Java (null se o Java não respondeu no login).
+export const sessaoSchema = loginResponseSchema.extend({ tokenJava: z.string().nullable() });
+export type Sessao = z.infer<typeof sessaoSchema>;
+
 export const loginRequestSchema = z.object({
   email: z.string().trim().min(1, 'Informe o e-mail.'),
   senha: z.string().min(1, 'Informe a senha.'),
