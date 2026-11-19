@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { calcularDisponibilidade } from '@/features/refugios/disponibilidade';
 import { useRefugios } from '@/features/refugios/hooks/use-refugios';
-import { listarRefugios } from '@/features/refugios/refugio.service';
+import { refugiosDoIdoso } from '@/features/refugios/refugio.service';
 import { requisicoes, simularApi, simularResposta } from '@/test-utils/api-falsa';
 import { umaPagina, umRefugio } from '@/test-utils/fabricas';
 import { comQueryClient } from '@/test-utils/providers';
@@ -29,16 +29,17 @@ describe('calcularDisponibilidade', () => {
   });
 });
 
-describe('listarRefugios', () => {
+describe('listar refúgios do idoso', () => {
   it('envia só os filtros informados', async () => {
     simularResposta({ data: umaPagina([umRefugio()]) });
-    await listarRefugios({ data: '2026-11-27', ativo: true, tamanho: 10, pagina: 1, bairro: undefined });
+    await refugiosDoIdoso.listar({ data: '2026-11-27', ativo: true, tamanho: 10, pagina: 1, bairro: undefined });
+    expect(requisicoes[0].baseURL).toBe('http://api.teste');
     expect(requisicoes[0].params).toEqual({ data: '2026-11-27', ativo: true, tamanho: 10, pagina: 1, bairro: undefined });
   });
 
   it('recusa resposta fora do contrato', async () => {
     simularResposta({ data: umaPagina([{ id: 1 }]) });
-    await expect(listarRefugios({})).rejects.toThrow();
+    await expect(refugiosDoIdoso.listar({})).rejects.toThrow();
   });
 });
 

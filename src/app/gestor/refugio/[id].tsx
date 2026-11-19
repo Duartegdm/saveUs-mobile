@@ -8,6 +8,7 @@ import { ConfirmarExclusao } from '@/features/gestor/components/confirmar-exclus
 import { FormularioDoRefugio } from '@/features/gestor/components/formulario-do-refugio';
 import { useFormularioDoRefugio } from '@/features/gestor/hooks/use-formulario-do-refugio';
 import { useRefugio } from '@/features/refugios/hooks/use-refugio';
+import { refugiosDoGestor } from '@/features/refugios/refugio.service';
 import type { Refugio } from '@/types/refugio';
 import { hojeEmSaoPaulo } from '@/utils/date';
 
@@ -50,7 +51,7 @@ function EditarRefugio({ refugio }: { refugio: Refugio }) {
 export default function EditarRefugioScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const id = Number(params.id);
-  const consulta = useRefugio(id, hojeEmSaoPaulo());
+  const consulta = useRefugio(id, hojeEmSaoPaulo(), refugiosDoGestor);
 
   if (!Number.isInteger(id) || id <= 0) {
     return (

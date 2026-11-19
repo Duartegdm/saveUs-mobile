@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/use-auth';
 import { GestorRefugioCard } from '@/features/gestor/components/gestor-refugio-card';
 import { useAlternarAtivo } from '@/features/gestor/hooks/use-acoes-do-refugio';
 import { useRefugios } from '@/features/refugios/hooks/use-refugios';
+import { refugiosDoGestor } from '@/features/refugios/refugio.service';
 import { ApiError } from '@/services/api';
 import { colors } from '@/theme/colors';
 
@@ -43,7 +44,7 @@ function EstadoDoGestor({ carregando, erro, onTentarDeNovo }: EstadoDoGestorProp
 
 export default function GestorRefugiosScreen() {
   const auth = useAuth();
-  const consulta = useRefugios({});
+  const consulta = useRefugios({}, { servico: refugiosDoGestor });
   const alternar = useAlternarAtivo();
 
   const primeiroNome = auth.status === 'autenticado' ? auth.usuario.nome.split(' ')[0] : '';

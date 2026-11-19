@@ -1,6 +1,6 @@
 import { consultarCep } from '@/features/gestor/cep.service';
 import { FORMULARIO_VAZIO, paraFormulario, paraRequest, refugioFormSchema } from '@/features/gestor/refugio-form';
-import { atualizarRefugio, criarRefugio, excluirRefugio } from '@/features/refugios/refugio.service';
+import { refugiosDoGestor } from '@/features/refugios/refugio.service';
 import { corpoDaUltimaRequisicao, requisicoes, simularErro, simularResposta } from '@/test-utils/api-falsa';
 import { umRefugio } from '@/test-utils/fabricas';
 import { refugioRequestSchema } from '@/types/refugio';
@@ -49,15 +49,19 @@ describe('formulário do refúgio', () => {
   });
 });
 
-describe('serviços do gestor', () => {
+describe('serviços do gestor (backend Java)', () => {
   it('cria, atualiza e exclui nas rotas certas', async () => {
     const dados = paraRequest(umRefugio());
     simularResposta({ status: 201, data: umRefugio() });
-    await criarRefugio(dados);
-    expect([requisicoes[0].method, requisicoes[0].url]).toEqual(['post', '/api/v1/refugios']);
+    await refugiosDoGestor.criar(dados);
+    expect([requisicoes[0].baseURL, requisicoes[0].method, requisicoes[0].url]).toEqual([
+      'http://java.teste',
+      'post',
+      '/api/v1/refugios',
+    ]);
 
     simularResposta({ data: umRefugio({ ativo: false }) });
-    await atualizarRefugio(5, { ...dados, ativo: false });
+    await refugiosDoGestor.atualizar(5, { ...dados, ativo: false });
     expect([requisicoes[0].method, requisicoes[0].url]).toEqual(['put', '/api/v1/refugios/5']);
     expect(corpoDaUltimaRequisicao()).toMatchObject({ ativo: false });
   });
@@ -67,7 +71,7 @@ describe('serviços do gestor', () => {
       title: 'Refúgio com reservas',
       detail: 'Este refúgio tem reservas ativas para hoje ou datas futuras. Desative-o em vez de excluir.',
     });
-    await expect(excluirRefugio(5)).rejects.toMatchObject({ status: 409, title: 'Refúgio com reservas' });
+    await expect(refugiosDoGestor.excluir(5)).rejects.toMatchObject({ status: 409, title: 'Refúgio com reservas' });
   });
 
   it('consulta o CEP só com os dígitos', async () => {
@@ -75,7 +79,7 @@ describe('serviços do gestor', () => {
       data: { cep: '03601-000', endereco: 'Rua Padre Benedito de Camargo', bairro: 'Penha', cidade: 'São Paulo', uf: 'SP' },
     });
     const endereco = await consultarCep('03601-000');
-    expect(requisicoes[0].url).toBe('/api/v1/cep/03601000');
+    expect([requisicoes[0].baseURL, requisicoes[0].url]).toEqual(['http://java.teste', '/api/v1/cep/03601000']);
     expect(endereco.bairro).toBe('Penha');
   });
 });

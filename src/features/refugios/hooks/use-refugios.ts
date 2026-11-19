@@ -1,18 +1,20 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/services/query-keys';
 import type { ListarRefugiosQuery } from '@/types/refugio';
-import { listarRefugios } from '../refugio.service';
+import { refugiosDoIdoso, type ServicoDeRefugios } from '../refugio.service';
 
 const TAMANHO_DA_PAGINA = 10;
 
 type Filtros = Pick<ListarRefugiosQuery, 'bairro' | 'data' | 'ativo'>;
 
-export function useRefugios({ bairro, data, ativo }: Filtros, { enabled = true }: { enabled?: boolean } = {}) {
+type Opcoes = { enabled?: boolean; servico?: ServicoDeRefugios };
+
+export function useRefugios({ bairro, data, ativo }: Filtros, { enabled = true, servico = refugiosDoIdoso }: Opcoes = {}) {
   const filtros = { bairro, data, ativo, tamanho: TAMANHO_DA_PAGINA };
 
   const consulta = useInfiniteQuery({
     queryKey: queryKeys.refugios.lista(filtros),
-    queryFn: ({ pageParam }) => listarRefugios({ ...filtros, pagina: pageParam }),
+    queryFn: ({ pageParam }) => servico.listar({ ...filtros, pagina: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (ultima) => (ultima.pagina < ultima.totalPaginas ? ultima.pagina + 1 : undefined),
     enabled,

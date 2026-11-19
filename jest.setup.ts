@@ -1,4 +1,5 @@
 process.env.EXPO_PUBLIC_API_URL = 'http://api.teste';
+process.env.EXPO_PUBLIC_JAVA_API_URL = 'http://java.teste';
 
 jest.mock('expo-secure-store', () => {
   const memoria = new Map<string, string>();

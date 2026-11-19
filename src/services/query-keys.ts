@@ -3,6 +3,7 @@ import type { DataApi } from '@/utils/date';
 
 export const queryKeys = {
   perfil: ['perfil'] as const,
+  guia: ['guia-do-calor'] as const,
   refugios: {
     todos: ['refugios'] as const,
     listas: ['refugios', 'lista'] as const,

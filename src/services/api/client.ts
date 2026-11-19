@@ -1,29 +1,35 @@
-import { create, isAxiosError } from 'axios';
+import { type AxiosInstance, create, isAxiosError } from 'axios';
 import { toApiError } from './errors';
 import { getAuthToken, notifyUnauthorized } from './session';
 
-const baseURL = process.env.EXPO_PUBLIC_API_URL;
-
-if (!baseURL) {
-  throw new Error('Defina EXPO_PUBLIC_API_URL no arquivo .env.');
+function urlObrigatoria(nome: string, valor: string | undefined) {
+  if (!valor) throw new Error(`Defina ${nome} no arquivo .env.`);
+  return valor;
 }
 
-export const api = create({ baseURL, timeout: 15_000 });
+function criarCliente(baseURL: string): AxiosInstance {
+  const cliente = create({ baseURL, timeout: 15_000 });
 
-api.interceptors.request.use((config) => {
-  const token = getAuthToken();
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+  cliente.interceptors.request.use((config) => {
+    const token = getAuthToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const apiError = toApiError(error);
+  cliente.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      const apiError = toApiError(error);
 
-    const tinhaToken = isAxiosError(error) && Boolean(error.config?.headers?.Authorization);
-    if (apiError.status === 401 && tinhaToken) notifyUnauthorized();
+      const tinhaToken = isAxiosError(error) && Boolean(error.config?.headers?.Authorization);
+      if (apiError.status === 401 && tinhaToken) notifyUnauthorized();
 
-    return Promise.reject(apiError);
-  },
-);
+      return Promise.reject(apiError);
+    },
+  );
+
+  return cliente;
+}
+
+export const api = criarCliente(urlObrigatoria('EXPO_PUBLIC_API_URL', process.env.EXPO_PUBLIC_API_URL));
+export const apiJava = criarCliente(urlObrigatoria('EXPO_PUBLIC_JAVA_API_URL', process.env.EXPO_PUBLIC_JAVA_API_URL));
