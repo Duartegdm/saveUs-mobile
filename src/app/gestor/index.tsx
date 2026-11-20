@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Building2, Plus } from 'lucide-react-native';
+import { Building2, Info, Plus } from 'lucide-react-native';
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { EstadoDaLista } from '@/components/estado-da-lista';
 import { Alert, Button, Screen, Text } from '@/components/ui';
@@ -59,6 +59,7 @@ export default function GestorRefugiosScreen() {
         <Text tone="muted">{consulta.isSuccess ? descreverTotal(consulta.total) : 'Gestão de refúgios'}</Text>
       </View>
       <Button label="Cadastrar refúgio" icon={Plus} variant="secondary" size="lg" onPress={cadastrar} />
+      <Button label="Sobre o App" icon={Info} variant="tonal" onPress={() => router.push('/sobre')} />
       {erroAoAlternar && (
         <Alert
           tone="error"

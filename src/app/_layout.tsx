@@ -16,6 +16,7 @@ import { rotaInicial } from '@/features/auth/rota-inicial';
 import { useAuth } from '@/features/auth/use-auth';
 import { queryClient } from '@/services/query-client';
 import { colors } from '@/theme/colors';
+import { stackScreenOptions } from '@/theme/navigation';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,6 +63,7 @@ function RootNavigator() {
       <Stack.Protected guard={papel === 'GESTOR'} redirectTo={destino}>
         <Stack.Screen name="gestor" />
       </Stack.Protected>
+      <Stack.Screen name="sobre" options={{ ...stackScreenOptions, headerShown: true, title: 'Sobre o App' }} />
     </Stack>
   );
 }

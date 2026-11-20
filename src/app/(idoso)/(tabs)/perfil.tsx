@@ -1,4 +1,5 @@
-import { IdCard, LogOut, Mail, MapPin, Phone, PhoneCall, Save, UserRound } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { IdCard, Info, LogOut, Mail, MapPin, Phone, PhoneCall, Save, UserRound } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { EstadoDaLista } from '@/components/estado-da-lista';
@@ -144,7 +145,8 @@ export default function PerfilScreen() {
         />
       </Secao>
 
-      <View className="pb-space-sm pt-space-sm">
+      <View className="gap-space-sm pb-space-sm pt-space-sm">
+        <Button label="Sobre o App" icon={Info} variant="tonal" onPress={() => router.push('/sobre')} />
         <Button label="Sair da conta" icon={LogOut} variant="tonal" onPress={() => void sair()} />
       </View>
     </Screen>
