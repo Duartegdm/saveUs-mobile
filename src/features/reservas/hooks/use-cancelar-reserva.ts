@@ -16,6 +16,7 @@ export function useCancelarReserva() {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       void queryClient.invalidateQueries({ queryKey: queryKeys.reservas.todas });
       void queryClient.invalidateQueries({ queryKey: queryKeys.refugios.todos });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.guiaDoCalor });
     },
     onError: () => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { MapPin, Phone, TriangleAlert } from 'lucide-react-native';
 import { Alert as AlertNativo, Linking, View } from 'react-native';
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { GuiaPersonalizado } from '@/features/guia-calor/components/guia-personalizado';
 import { CUIDADOS, type Cuidado, O_QUE_FAZER, SINAIS_DE_ALERTA, TELEFONE_SAMU } from '@/features/guia-calor/conteudo';
 import { colors } from '@/theme/colors';
 
@@ -88,6 +89,8 @@ export default function GuiaCalorScreen() {
           quentes.
         </Text>
       </View>
+
+      <GuiaPersonalizado />
 
       {CUIDADOS.map((cuidado) => (
         <CartaoDeCuidado key={cuidado.titulo} {...cuidado} />
