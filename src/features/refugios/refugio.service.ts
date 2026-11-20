@@ -1,27 +1,40 @@
-import { api } from '@/services/api';
+import type { AxiosInstance } from 'axios';
+import { api, apiJava } from '@/services/api';
 import { type ListarRefugiosQuery, paginaRefugioSchema, type RefugioRequest, refugioSchema } from '@/types/refugio';
 import type { DataApi } from '@/utils/date';
 
-export async function listarRefugios(query: ListarRefugiosQuery) {
-  const { data } = await api.get<unknown>('/api/v1/refugios', { params: query });
-  return paginaRefugioSchema.parse(data);
+export function criarServicoDeRefugios(cliente: AxiosInstance) {
+  return {
+    async listar(query: ListarRefugiosQuery) {
+      const { data } = await cliente.get<unknown>('/api/v1/refugios', { params: query });
+      return paginaRefugioSchema.parse(data);
+    },
+
+    async obter(id: number, data: DataApi) {
+      const resposta = await cliente.get<unknown>(`/api/v1/refugios/${id}`, { params: { data } });
+      return refugioSchema.parse(resposta.data);
+    },
+
+    async criar(refugio: RefugioRequest) {
+      const { data } = await cliente.post<unknown>('/api/v1/refugios', refugio);
+      return refugioSchema.parse(data);
+    },
+
+    async atualizar(id: number, refugio: RefugioRequest) {
+      const { data } = await cliente.put<unknown>(`/api/v1/refugios/${id}`, refugio);
+      return refugioSchema.parse(data);
+    },
+
+    async excluir(id: number) {
+      await cliente.delete(`/api/v1/refugios/${id}`);
+    },
+  };
 }
 
-export async function obterRefugio(id: number, data: DataApi) {
-  const resposta = await api.get<unknown>(`/api/v1/refugios/${id}`, { params: { data } });
-  return refugioSchema.parse(resposta.data);
-}
+export type ServicoDeRefugios = ReturnType<typeof criarServicoDeRefugios>;
 
-export async function criarRefugio(refugio: RefugioRequest) {
-  const { data } = await api.post<unknown>('/api/v1/refugios', refugio);
-  return refugioSchema.parse(data);
-}
+/** Telas do idoso: leitura no .NET, que também controla as reservas. */
+export const refugiosDoIdoso = criarServicoDeRefugios(api);
 
-export async function atualizarRefugio(id: number, refugio: RefugioRequest) {
-  const { data } = await api.put<unknown>(`/api/v1/refugios/${id}`, refugio);
-  return refugioSchema.parse(data);
-}
-
-export async function excluirRefugio(id: number) {
-  await api.delete(`/api/v1/refugios/${id}`);
-}
+/** Telas do gestor: CRUD no backend Java. */
+export const refugiosDoGestor = criarServicoDeRefugios(apiJava);
